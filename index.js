@@ -6,6 +6,9 @@ const exphbs = require('express-handlebars');
 const flash = require('connect-flash');
 const session = require('express-session');
 const passport = require('passport');
+const qrcode = require('qrcode');
+
+const {ensureAuthenticated} = require('./config/auth');
 
 //app declaration
 const app = express();
@@ -86,10 +89,22 @@ app.post('/', (req, res) => {
     res.send(req.body);
 });
 app.get('/', (req, res) => {
-    res.redirect('/login'); //replace with landing
+    res.render('home', {layout: 'landing'});
+    
 });
 
-
+app.get('/dashboard', ensureAuthenticated ,(req, res) => {
+    qrcode.toDataURL(req.user.name,{ errorCorrectionLevel: 'H' }, (err, url)=>{
+        if (!err) {
+            code = url;
+            res.render('index',{code});
+        } 
+        else {
+            console.log('error generating code!');
+            res.sendStatus(500);
+        }
+    });
+});
 //SERVER LISTEN
 
 const PORT = process.env.PORT || 3000;
