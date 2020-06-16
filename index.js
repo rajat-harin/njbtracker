@@ -74,6 +74,9 @@ const hashRoute = require('./Routes/hash');
 const tripRoute = require('./Routes/trip');
 const loginRoute = require('./Routes/login');
 const signupRoute = require('./Routes/signup');
+const qrcodeRoute = require('./Routes/qrcode');
+const dashBoardRoute = require('./Routes/dashboard');
+
 
 
 
@@ -83,6 +86,8 @@ app.use('/api/hash', hashRoute);
 app.use('/register', tripRoute);
 app.use('/login', loginRoute);
 app.use('/signup', signupRoute);
+app.use('/qrcode', qrcodeRoute);
+app.use('/dashboard', dashBoardRoute);
 
 
 app.post('/', (req, res) => {
@@ -93,18 +98,6 @@ app.get('/', (req, res) => {
     
 });
 
-app.get('/dashboard', ensureAuthenticated ,(req, res) => {
-    qrcode.toDataURL(req.user.name,{ errorCorrectionLevel: 'H' }, (err, url)=>{
-        if (!err) {
-            code = url;
-            res.render('index',{code});
-        } 
-        else {
-            console.log('error generating code!');
-            res.sendStatus(500);
-        }
-    });
-});
 //SERVER LISTEN
 
 const PORT = process.env.PORT || 3000;
