@@ -83,7 +83,6 @@ router.post("/order", (req, res) => {
 });
 
 router.get("/deliver", (req, res) => {
-  console.log(req);
   res.render("delivery", { layout: "dashboard" });
 });
 //deliver route after session implimentation add login id
