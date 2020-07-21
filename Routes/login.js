@@ -20,32 +20,6 @@ router.get("/", (req, res) => {
   // });
 });
 
-router.post("/app", (req, res) => {
-  let errors = [];
-  const { username, password } = req.body;
-
-  connection.query(
-    "SELECT username, password FROM login WHERE username=$1",
-    [username],
-    (err, result) => {
-      if (!err) {
-        if (result.rowCount == 1) {
-          if (password == result.rows[0].password) {
-            res.send(result.rows[0]);
-          } else {
-            res.sendStatus(500);
-          }
-        } else {
-          res.send(0);
-        }
-      } else {
-        console.log("query error");
-        res.sendStatus(500);
-      }
-    }
-  );
-});
-
 router.post("/", (req, res, next) => {
   passport.authenticate("local", {
     successRedirect: "/dashboard",

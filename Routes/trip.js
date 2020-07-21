@@ -90,11 +90,11 @@ router.post("/deliver", (req, res) => {
   let name = req.body.name;
   let designation = req.body.designation;
   let vehicleno = req.body.vehicleno;
-  let login_id = null; // imp
+  let login_id = req.user.id; // imp
 
   connection.query(
-    "INSERT INTO delivery_system (name, designation, vehicle_no ) VALUES ($1,$2,$3)",
-    [name, designation, vehicleno],
+    "INSERT INTO delivery_system (name, designation, vehicle_no, login_id ) VALUES ($1,$2,$3,$4)",
+    [name, designation, vehicleno, login_id],
     (err, result) => {
       if (!err) {
         res.send(req.body);

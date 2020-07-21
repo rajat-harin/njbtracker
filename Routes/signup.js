@@ -37,21 +37,4 @@ router.post("/", (req, res) => {
   );
 });
 
-router.post("/app", (req, res) => {
-  const { name, contact, email, username, password, category } = req.body;
-
-  connection.query(
-    "INSERT INTO login (email,password,category,username,contact,name) VALUES  ($1,$2,$3,$4,$5,$6)",
-    [email, password, category, username, contact, name],
-    (err, result) => {
-      if (!err) {
-        res.send(1);
-      } else {
-        res.status(500).send(err);
-        console.log(err);
-      }
-    }
-  );
-});
-
 module.exports = router;
