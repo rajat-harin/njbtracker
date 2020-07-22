@@ -121,6 +121,16 @@ router.get("/order", (req, res) => {
   );
 });
 
+router.get("/orderall", (req, res) => {
+  connection.query("SELECT * FROM orders", (err, result) => {
+    if (!err) {
+      res.send(result.fields);
+    } else {
+      res.send("-1");
+    }
+  });
+});
+
 router.post("/order", (req, res) => {
   let source_id = req.body.source_id;
   let destination_id = req.body.destination_id;

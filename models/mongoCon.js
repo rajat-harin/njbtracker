@@ -16,9 +16,7 @@ client.connect((err, client) => {
 
     const db = client.db(dbName);
 
-    createValidated(db, () => {
-      client.close();
-    });
+    createValidated(db, () => {});
   }
 });
 

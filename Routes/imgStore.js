@@ -5,15 +5,13 @@ const router = express.Router();
 
 router.get("/", (req, res) => {
   client.connect((err, client) => {
-    console.log("Connected correctly to server");
+    console.log("Connected correctly to server for img get");
     const db = client.db("Sih");
 
     // Insert a single document
     db.collection("njb").find((err, docs) => {
       if (!err) {
-        //console.log(docs);
-
-        res.send(docs);
+        console.log(docs);
       } else {
         console.log("err");
       }
@@ -53,13 +51,13 @@ router.post("/", (req, res) => {
     if (err) {
       console.log(err);
     } else {
-      console.log("Connected correctly to server");
+      console.log("Connected correctly to server for img post");
       const db = client.db("Sih");
 
       // Insert a single document
       db.collection("njb").insertOne({ tripName, image, d }, (err, result) => {
         if (err) throw err;
-        client.close();
+        // client.close();
       });
     }
   });
