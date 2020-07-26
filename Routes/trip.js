@@ -1,6 +1,7 @@
 // rename this route to register or modularize this
 const express = require("express");
 const connection = require("../connection");
+const { ensureAuthenticated } = require("../config/auth");
 
 const router = express.Router();
 
@@ -25,23 +26,23 @@ const router = express.Router();
 // });
 
 router.get("/order", (req, res) => {
-  let cities;
+  let cities = [];
   let products;
-  let deliver;
+  let deliver = [];
   connection.query("SELECT id, city FROM places", (err, result) => {
     if (!err) {
       result.rows.forEach((element) => {
-        cities = element;
+        cities.push(element);
       });
       connection.query("SELECT id, name FROM products", (err, result) => {
         if (!err) {
-          products = result;
+          products = result.rows;
           connection.query(
             "SELECT id, vehicle_no FROM delivery_system",
             (err, result, fields) => {
               if (!err) {
                 result.rows.forEach((element) => {
-                  deliver = element;
+                  deliver.push(element);
                 });
                 res.render("trip", {
                   layout: "dashboard",
@@ -90,16 +91,17 @@ router.post("/deliver", (req, res) => {
   let name = req.body.name;
   let designation = req.body.designation;
   let vehicleno = req.body.vehicleno;
-  let login_id = req.user.id; // imp
+  //let login_id = req.user.id; // imp
 
   connection.query(
-    "INSERT INTO delivery_system (name, designation, vehicle_no, login_id ) VALUES ($1,$2,$3,$4)",
-    [name, designation, vehicleno, login_id],
+    "INSERT INTO delivery_system (name, designation, vehicle_no ) VALUES ($1,$2,$3)",
+    [name, designation, vehicleno],
     (err, result) => {
       if (!err) {
         res.send(req.body);
       } else {
-        res.send("0");
+        console.log(err);
+        res.send(err);
       }
     }
   );
@@ -117,12 +119,13 @@ router.post("/places", (req, res) => {
   let pincode = req.body.pincode;
 
   connection.query(
-    "INSERT INTO places (area,place_type,state,city,country,pincode) VALUES ($1,$2,$3,$4,$5,%6)",
+    "INSERT INTO places (area,place_type,state,city,country,pincode) VALUES ($1,$2,$3,$4,$5,$6)",
     [area, place_type, state, city, country, pincode],
     (err, result) => {
       if (!err) {
         res.send(result); //must be redirected to dashboard
       } else {
+        console.log(err);
         res.sendStatus(500);
       }
     }

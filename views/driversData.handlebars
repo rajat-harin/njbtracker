@@ -1,0 +1,25 @@
+<div class="container-fluid">
+    <table class="table">
+  <thead>
+    <tr>
+      <th scope="col">#</th>
+      <th scope="col">name</th>
+      <th scope="col">Designation</th>
+      <th scope="col">Vehicle Id</th>
+    </tr>
+  </thead>
+  <tbody>
+    {{#if drivers}}
+        {{#each drivers}}
+            <tr>
+                <th scope="row">{{this.id}}</th>
+                <td>{{this.name}}</td>
+                <td>{{this.designation}}</td>
+                <td>{{this.vehicle_no}}</td>
+            </tr>
+        {{/each}}
+    {{/if}}
+    
+  </tbody>
+</table>
+</div>

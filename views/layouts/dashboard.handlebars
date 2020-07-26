@@ -14,7 +14,7 @@
     <link rel="stylesheet" type="text/css" href="/dashboard/vendor/select2/select2.css">
 </head>
 
-<body onload="initViz();">
+<body>{{!-- <body onload="initViz();"> --}}
 
     <!--*******************
         Preloader start
@@ -263,7 +263,9 @@
                             <i class="icon-speedometer menu-icon"></i><span class="nav-text">Dashboard</span>
                         </a>
                         <ul aria-expanded="false">
-                            <li><a href="/dashboard">Dashboard 1</a></li>
+                            <li><a href="/dashboard">Dashboard</a></li>
+                            <li><a href="/dashboard/trips">Orders List (Trips)</a></li>
+                            <li><a href="/dashboard/drivers">Resgistered Drivers</a></li>
                             <!-- <li><a href="./index-2.html">Home 2</a></li> -->
                         </ul>
                     </li>
@@ -315,7 +317,7 @@
         <script src="/dashboard/js/custom.min.js"></script>
         <script src="/dashboard/js/settings.js"></script>
         <script src="/dashboard/js/gleek.js"></script>
-        <script type="text/javascript">
+        {{!-- <script type="text/javascript">
             var workbook, activesheet;
             function initViz() {
                 var containerDiv = document.getElementById("vizContainer"),
@@ -338,8 +340,8 @@
 
                 var viz = new tableau.Viz(containerDiv, url, options);
             }
-        </script>
-        <script src="https://public.tableau.com/javascripts/api/tableau-2.min.js"></script>
+        </script> --}}
+        {{!-- <script src="https://public.tableau.com/javascripts/api/tableau-2.min.js"></script> --}}
 
 </body>
 
