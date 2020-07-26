@@ -1,0 +1,27 @@
+<div class="container-fluid">
+    <table class="table">
+  <thead>
+    <tr>
+      <th scope="col">#</th>
+      <th scope="col">Source</th>
+      <th scope="col">Destination</th>
+      <th scope="col">Product</th>
+      <th scope="col">Vehicle</th>
+    </tr>
+  </thead>
+  <tbody>
+    {{#if orders}}
+        {{#each orders}}
+            <tr>
+                <th scope="row">{{this.id}}</th>
+                <td>{{this.source_id}}</td>
+                <td>{{this.destination_id}}</td>
+                <td>{{this.product_id}}</td>
+                <td>{{this.delivery_id}}</td>
+            </tr>
+        {{/each}}
+    {{/if}}
+    
+  </tbody>
+</table>
+</div>

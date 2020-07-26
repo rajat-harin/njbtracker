@@ -11,7 +11,7 @@ router.get("/", (req, res) => {
     // Insert a single document
     db.collection("njb").find((err, docs) => {
       if (!err) {
-        console.log(docs);
+        res.send("dont be greedy");
       } else {
         console.log("err");
       }
@@ -21,7 +21,7 @@ router.get("/", (req, res) => {
 
 router.get("/:name", (req, res) => {
   client.connect((err, client) => {
-    console.log("Connected correctly to server");
+    console.log("Connected correctly to server get with name");
     const db = client.db("Sih");
 
     // Insert a single document
@@ -46,6 +46,7 @@ router.post("/", (req, res) => {
   //   let trip = new tripSchema();
   let tripName = req.body.name;
   let image = req.body.image;
+  console.log(req.body);
   let d = Date.now();
   client.connect((err, client) => {
     if (err) {
@@ -56,7 +57,11 @@ router.post("/", (req, res) => {
 
       // Insert a single document
       db.collection("njb").insertOne({ tripName, image, d }, (err, result) => {
-        if (err) throw err;
+        if (err) {
+          console.log(err);
+        } else {
+          res.send("1");
+        }
         // client.close();
       });
     }
