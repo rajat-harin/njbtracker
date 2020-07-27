@@ -16,7 +16,7 @@ router.post("/login", (req, res) => {
       if (!err) {
         if (result.rowCount == 1) {
           if (password == result.rows[0].password) {
-            res.send("1");
+            res.send(result.rows);
           } else {
             res.send("0");
           }
