@@ -40,7 +40,7 @@ router.post("/register", (req, res) => {
     (err, result) => {
       if (!err) {
         var message = {
-          "categort":category,
+          "category":category,
           "username":username,
           "password":password
       };
