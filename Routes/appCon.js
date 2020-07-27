@@ -17,14 +17,14 @@ router.post("/login", (req, res) => {
           if (password == result.rows[0].password) {
             res.send(result.rows[0]);
           } else {
-            res.sendStatus(500);
+            res.send("0");
           }
         } else {
-          res.send(0);
+          res.send("-1");
         }
       } else {
         console.log("query error");
-        res.sendStatus(500);
+        res.send("-1");
       }
     }
   );
