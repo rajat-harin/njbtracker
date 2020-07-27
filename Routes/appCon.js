@@ -39,7 +39,35 @@ router.post("/register", (req, res) => {
     [email, password, category, username, contact, name],
     (err, result) => {
       if (!err) {
-        res.send("1");
+        var id;
+        "SELECT * FROM login WHERE username=$1,$2",
+          [username,password],
+          (err, result) => {
+            if (!err) {
+              if (result.rowCount == 1) {
+                if (password == result.rows[0].password) {
+                  id = rows;
+                  res.send(result.rows);
+                } else {
+                  res.send("0");
+                }
+              } else {
+                res.send("-1");
+                console.log("no user");
+              }
+            } else {
+              console.log("query error");
+              res.send("-2");
+            }
+          }
+
+        var message = {
+          "category": category,
+          "username": username,
+          "password": password,
+          "loginid":id
+        };
+        res.send(message);
       } else {
         res.send("-1");
         console.log(err);
