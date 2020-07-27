@@ -7,6 +7,7 @@ const router = express.Router();
 router.post("/login", (req, res) => {
   let errors = [];
   const { username, password } = req.body;
+  console.log(req.body);
 
   connection.query(
     "SELECT * FROM login WHERE username=$1",
@@ -15,12 +16,13 @@ router.post("/login", (req, res) => {
       if (!err) {
         if (result.rowCount == 1) {
           if (password == result.rows[0].password) {
-            res.send(result.rows[0]);
+            res.send("1");
           } else {
             res.send("0");
           }
         } else {
           res.send("-1");
+          console.log("no user");
         }
       } else {
         console.log("query error");
@@ -38,7 +40,7 @@ router.post("/register", (req, res) => {
     [email, password, category, username, contact, name],
     (err, result) => {
       if (!err) {
-        res.send(1);
+        res.send("1");
       } else {
         res.status(500).send(err);
         console.log(err);
@@ -60,9 +62,9 @@ router.post("/places", (req, res) => {
     [area, place_type, state, city, country, pincode],
     (err, result) => {
       if (!err) {
-        res.send(1); //must be redirected to dashboard
+        res.send("1"); //must be redirected to dashboard
       } else {
-        res.sendStatus(500);
+        res.send("-1");
       }
     }
   );
@@ -78,9 +80,9 @@ router.post("/product", (req, res) => {
     [name, where_made, product_state],
     (err, result) => {
       if (!err) {
-        res.send(1);
+        res.send("1");
       } else {
-        res.send("0");
+        res.send("-1");
       }
     }
   );
@@ -97,7 +99,7 @@ router.post("/deliver", (req, res) => {
     [name, designation, vehicleno, login_id],
     (err, result) => {
       if (!err) {
-        res.send(1);
+        res.send("1");
       } else {
         res.send("0");
       }
@@ -142,7 +144,7 @@ router.post("/order", (req, res) => {
     [source_id, destination_id, product_id, delivery_id],
     (err, result) => {
       if (!err) {
-        res.send(req.body);
+        res.send("1");
       } else {
         res.send("0");
       }
