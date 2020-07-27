@@ -48,7 +48,35 @@ router.post("/register", (req, res) => {
   );
 });
 
-router.post("/places", (req, res) => {
+router.get("/trip_info", (req, res) => {
+  let id = req.body.id;
+  // let login_id = req.user.id; // imp
+
+  connection.query(
+    "SELECT * FROM orders WHERE delivery_id = $1",
+    [id],
+    (err, result) => {
+      if (!err) {
+        res.send(result.rows);
+      } else {
+        console.log(err);
+        res.send("-1");
+      }
+    }
+  );
+});
+
+router.get("/order_info", (req, res) => {
+  connection.query("SELECT * FROM orders", (err, result) => {
+    if (!err) {
+      res.send(result.rows);
+    } else {
+      res.send("-1");
+    }
+  });
+});
+
+router.post("/enter_places", (req, res) => {
   let area = req.body.area;
   let place_type = req.body.place_type;
   let state = req.body.state;
@@ -70,7 +98,7 @@ router.post("/places", (req, res) => {
   );
 });
 
-router.post("/product", (req, res) => {
+router.post("/product_description", (req, res) => {
   let name = req.body.name;
   let where_made = req.body.where_made;
   let product_state = req.body.productstate;
@@ -88,7 +116,7 @@ router.post("/product", (req, res) => {
   );
 });
 
-router.post("/deliver", (req, res) => {
+router.post("/delivery_system", (req, res) => {
   let name = req.body.name;
   let designation = req.body.designation;
   let vehicleno = req.body.vehicleno;
@@ -107,32 +135,32 @@ router.post("/deliver", (req, res) => {
   );
 });
 
-router.get("/order", (req, res) => {
-  let delivery_id = req.body.id;
-  connection.query(
-    "SELECT * FROM orders WHERE delivery_id = $1",
-    [delivery_id],
-    (err, result) => {
-      if (!err) {
-        res.send(result.rows[0]);
-      } else {
-        res.send("-1");
-      }
-    }
-  );
-});
-
-router.get("/orderall", (req, res) => {
-  connection.query("SELECT * FROM orders", (err, result) => {
+router.get("/trip_description", (req, res) => {
+  let cities;
+  let drivers;
+  let final = {};
+  connection.query("SELECT * FROM places", (err, result) => {
     if (!err) {
-      res.send(result.rows);
+      cities = result.rows;
+      connection.query("SELECT * FROM delivery_system", (err, result) => {
+        if (!err) {
+          drivers = result.rows;
+          final.cities = cities;
+          final.vehicle = drivers;
+          res.send(final);
+        } else {
+          res.send("-1");
+          console.log(err);
+        }
+      });
     } else {
       res.send("-1");
+      console.log(err);
     }
   });
 });
 
-router.post("/order", (req, res) => {
+router.post("/trip_details", (req, res) => {
   let source_id = req.body.source_id;
   let destination_id = req.body.destination_id;
   let product_id = req.body.product_id;
@@ -150,6 +178,21 @@ router.post("/order", (req, res) => {
     }
   );
 });
+
+// router.get("/order", (req, res) => {
+//   let delivery_id = req.body.id;
+//   connection.query(
+//     "SELECT * FROM orders WHERE delivery_id = $1",
+//     [delivery_id],
+//     (err, result) => {
+//       if (!err) {
+//         res.send(result.rows[0]);
+//       } else {
+//         res.send("-1");
+//       }
+//     }
+//   );
+// });
 
 // router.get("/places", (req, res) => {
 //   res.render("places", { layout: "dashboard" });
