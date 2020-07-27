@@ -56,7 +56,7 @@ app.use(express.static(path.join(__dirname, "public")));
 const imgStoreRoute = require("./Routes/imgStore");
 const hashRoute = require("./Routes/hash");
 const tripRoute = require("./Routes/trip");
-const appConRoute = require("./Routes/appCon");
+const appConRoute = require("./Routes/appConnection");
 const loginRoute = require("./Routes/login");
 const signupRoute = require("./Routes/signup");
 const qrcodeRoute = require("./Routes/qrcode");
