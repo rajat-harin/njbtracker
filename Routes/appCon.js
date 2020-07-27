@@ -42,7 +42,8 @@ router.post("/register", (req, res) => {
         var message = {
           "category":category,
           "username":username,
-          "password":password
+          "password":password,
+          "loginid":result.insertId
       };
         res.send(message);
       } else {
