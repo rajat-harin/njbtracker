@@ -43,7 +43,8 @@ router.post("/register", (req, res) => {
           "category":category,
           "username":username,
           "password":password,
-          "loginid":result.insertId
+          "loginid":result.insertId,
+          "abcd":"asdas"
       };
         res.send(message);
       } else {
