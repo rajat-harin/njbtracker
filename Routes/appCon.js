@@ -39,11 +39,11 @@ router.post("/register", (req, res) => {
     [email, password, category, username, contact, name],
     (err, result) => {
       if (!err) {
-        var message = [
-          "categort"=category,
-          "username"=username,
-          "password"=password
-        ];
+        var message = {
+          "categort":category,
+          "username":username,
+          "password":password
+      };
         res.send(message);
       } else {
         res.send("-1");
