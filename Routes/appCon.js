@@ -39,14 +39,14 @@ router.post("/register", (req, res) => {
     [email, password, category, username, contact, name],
     (err, result) => {
       if (!err) {
- var id;
+        var id;
         "SELECT * FROM login WHERE username=$1,$2",
           [username,password],
           (err, result) => {
             if (!err) {
               if (result.rowCount == 1) {
                 if (password == result.rows[0].password) {
-                  id = rows.id;
+                  id = rows;
                   res.send(result.rows);
                 } else {
                   res.send("0");
@@ -66,7 +66,6 @@ router.post("/register", (req, res) => {
           "username": username,
           "password": password,
           "abcd": result.insertId,
-          "result": result,
           "loginid":id
         };
         res.send(message);
