@@ -65,7 +65,6 @@ router.post("/register", (req, res) => {
           "category": category,
           "username": username,
           "password": password,
-          "abcd": result.insertId,
           "loginid":id
         };
         res.send(message);
