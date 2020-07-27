@@ -1,4 +1,3 @@
-// rename this route to register or modularize this
 const express = require("express");
 const connection = require("../connection");
 
@@ -42,7 +41,7 @@ router.post("/register", (req, res) => {
       if (!err) {
         res.send("1");
       } else {
-        res.status(500).send(err);
+        res.send("-1");
         console.log(err);
       }
     }
@@ -58,12 +57,13 @@ router.post("/places", (req, res) => {
   let pincode = req.body.pincode;
 
   connection.query(
-    "INSERT INTO places (area,place_type,state,city,country,pincode) VALUES ($1,$2,$3,$4,$5,%6)",
+    "INSERT INTO places (area,place_type,state,city,country,pincode) VALUES ($1,$2,$3,$4,$5,$6)",
     [area, place_type, state, city, country, pincode],
     (err, result) => {
       if (!err) {
         res.send("1"); //must be redirected to dashboard
       } else {
+        console.log(err);
         res.send("-1");
       }
     }
@@ -92,16 +92,16 @@ router.post("/deliver", (req, res) => {
   let name = req.body.name;
   let designation = req.body.designation;
   let vehicleno = req.body.vehicleno;
-  let login_id = req.user.id; // imp
+  // let login_id = req.user.id; // imp
 
   connection.query(
-    "INSERT INTO delivery_system (name, designation, vehicle_no, login_id ) VALUES ($1,$2,$3,$4)",
-    [name, designation, vehicleno, login_id],
+    "INSERT INTO delivery_system (name, designation, vehicle_no) VALUES ($1,$2,$3)",
+    [name, designation, vehicleno],
     (err, result) => {
       if (!err) {
         res.send("1");
       } else {
-        res.send("0");
+        res.send("-1");
       }
     }
   );
@@ -109,7 +109,6 @@ router.post("/deliver", (req, res) => {
 
 router.get("/order", (req, res) => {
   let delivery_id = req.body.id;
-
   connection.query(
     "SELECT * FROM orders WHERE delivery_id = $1",
     [delivery_id],
@@ -126,7 +125,7 @@ router.get("/order", (req, res) => {
 router.get("/orderall", (req, res) => {
   connection.query("SELECT * FROM orders", (err, result) => {
     if (!err) {
-      res.send(result.fields);
+      res.send(result.rows);
     } else {
       res.send("-1");
     }
@@ -146,7 +145,7 @@ router.post("/order", (req, res) => {
       if (!err) {
         res.send("1");
       } else {
-        res.send("0");
+        res.send("-1");
       }
     }
   );
