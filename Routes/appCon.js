@@ -26,7 +26,7 @@ router.post("/login", (req, res) => {
         }
       } else {
         console.log("query error");
-        res.send("-1");
+        res.send("-2");
       }
     }
   );
