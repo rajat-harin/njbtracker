@@ -40,11 +40,10 @@ router.post("/register", (req, res) => {
     (err, result) => {
       if (!err) {
         var message = {
-          "loginid":result.insertId,
           "category":category,
           "username":username,
           "password":password,
-          "abcd":"asdas"
+          "abcd":result.insertid
       };
         res.send(message);
       } else {
