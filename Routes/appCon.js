@@ -148,7 +148,7 @@ router.post("/delivery_system", (req, res) => {
   let name = req.body.name;
   let designation = req.body.designation;
   let vehicleno = req.body.vehicleno;
-  // let login_id = req.user.id; // imp
+  let login_id = req.body.login_id;
 
   connection.query(
     "INSERT INTO delivery_system (name, designation, vehicle_no) VALUES ($1,$2,$3)",
