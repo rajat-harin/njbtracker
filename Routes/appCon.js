@@ -1,5 +1,6 @@
 const express = require("express");
 const connection = require("../connection");
+const connection1 = require("../connection");
 
 const router = express.Router();
 
@@ -176,7 +177,7 @@ router.get("/trip_description", (req, res) => {
       console.log(err);
     }
   });
-  connection.query("SELECT * FROM places", (err, result) => {
+  connection1.query("SELECT * FROM places", (err, result) => {
     if (!err) {
       cities = result.rows;
       final.cities = cities;
