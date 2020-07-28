@@ -167,20 +167,20 @@ router.get("/trip_description", (req, res) => {
   let cities;
   let drivers;
   let final = {};
+  connection.query("SELECT * FROM delivery_system", (err, result) => {
+    if (!err) {
+      drivers = result.rows;
+      final.vehicle = drivers;
+    } else {
+      res.send("-1");
+      console.log(err);
+    }
+  });
   connection.query("SELECT * FROM places", (err, result) => {
     if (!err) {
       cities = result.rows;
-      connection.query("SELECT * FROM delivery_system", (err, result) => {
-        if (!err) {
-          drivers = result.rows;
-          final.cities = cities;
-          final.vehicle = drivers;
-          res.send(final);
-        } else {
-          res.send("-1");
-          console.log(err);
-        }
-      });
+      final.cities = cities;
+      res.send(final);
     } else {
       res.send("-1");
       console.log(err);
