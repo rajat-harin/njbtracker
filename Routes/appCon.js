@@ -151,8 +151,8 @@ router.post("/delivery_system", (req, res) => {
   let login_id = req.body.login_id;
 
   connection.query(
-    "INSERT INTO delivery_system (name, designation, vehicle_no) VALUES ($1,$2,$3)",
-    [name, designation, vehicleno],
+    "INSERT INTO delivery_system (name, designation, vehicle_no,login_id) VALUES ($1,$2,$3,$4)",
+    [name, designation, vehicleno,login_id],
     (err, result) => {
       if (!err) {
         res.send("1");
