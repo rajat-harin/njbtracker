@@ -5,8 +5,8 @@ Routes details
 /login
 /signup
 
-#Not linked
-#CSS Error
+#Done Final designing
+
 
 /register/order
 
@@ -15,3 +15,8 @@ Routes details
 /register/places
 
 /register/deliver
+
+
+Remianing work :-
+live tracking module integration 
+site speed

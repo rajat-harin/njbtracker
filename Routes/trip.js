@@ -152,5 +152,7 @@ router.post("/product", (req, res) => {
     }
   );
 });
-
+router.get("/driverregistration",(req,res)=>{
+  res.render("driverregistration",{layout :"dashboard"});
+});
 module.exports = router;
