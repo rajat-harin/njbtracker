@@ -95,7 +95,7 @@ router.get("/trip_info", (req, res) => {
     );
 });
 
-router.get("/order_info", (req, res) => {
+router.post("/order_info", (req, res) => {
     var final={};
     connection.query("SELECT * FROM orders where sender_id = $1", [req.body.id], (err, result) => {
         if (!err) {
