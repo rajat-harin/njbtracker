@@ -4,7 +4,45 @@ const connection = require("../connection");
 const router = express.Router();
 
 router.get("/", ensureAuthenticated, (req, res) => {
-  res.render("index", { layout: "dashboard" });
+  let onWay;
+  let yetToReach;
+  let reached;
+  connection.query(
+    "SELECT count(*) FROM products WHERE product_state like 'On%'",
+    (err, result) => {
+      if (!err) {
+        onWay = result.rows[0].count;
+        connection.query(
+          "SELECT count(*) FROM products WHERE product_state like 'Yet%'",
+          (err, result) => {
+            if (!err) {
+              yetToReach = result.rows[0].count;
+              connection.query(
+                "SELECT count(*) FROM products WHERE product_state like 'Reach%'",
+                (err, result) => {
+                  if (!err) {
+                    reached = result.rows[0].count;
+                    res.render("index", {
+                      layout: "dashboard",
+                      onWay,
+                      yetToReach,
+                      reached,
+                    });
+                  } else {
+                    res.sendStatus(500);
+                  }
+                }
+              );
+            } else {
+              res.sendStatus(500);
+            }
+          }
+        );
+      } else {
+        res.sendStatus(500);
+      }
+    }
+  );
 });
 
 router.get("/charts", ensureAuthenticated, (req, res) => {
@@ -102,6 +140,10 @@ router.get("/data", ensureAuthenticated, (req, res) => {
     ],
   };
   res.send(data);
+});
+
+router.get("/maps/:id", ensureAuthenticated, (req, res) => {
+  res.render("maps", { layout: false });
 });
 
 module.exports = router;
