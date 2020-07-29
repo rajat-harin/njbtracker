@@ -97,12 +97,16 @@ router.get("/trip_info", (req, res) => {
 
 router.post("/order_info", (req, res) => {
     var final={};
+    const id1 = req.body.id;
     // res.send("abd");
-    connection.query("SELECT * FROM orders where senders_id = $1", [req.body.id], (err, result1) => {
+    console.log(id1);
+    connection.query("SELECT * FROM orders where senders_id = $1", [id1], (err, result1) => {
         if (!err) {
             // res.send(result.rows);
             final.orders = result1.rows;
-            connection.query("select * from products where id=$1", [result1.rows.product_id], (err, result2) => {
+            const id2 = result1.rows.product_id;
+            console.log(id2);
+            connection.query("select * from products where id=$1", [id2], (err, result2) => {
                 if(!err)
                 {
                     final.products=result2.rows;
