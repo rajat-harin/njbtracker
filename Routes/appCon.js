@@ -98,9 +98,9 @@ router.get("/trip_info", (req, res) => {
 router.post("/order_info", (req, res) => {
     var final={};
     // res.send("abd");
-    connection.query("SELECT * FROM orders where sender_id = $1", [req.body.id], (err, result1) => {
+    connection.query("SELECT * FROM orders where senders_id = $1", [req.body.id], (err, result1) => {
         if (!err) {
-            res.send(result.rows);
+            // res.send(result.rows);
             final.orders = result1.rows;
             connection.query("select * from products where id=$1", [result1.rows.product_id], (err, result2) => {
                 if(!err)
