@@ -97,25 +97,25 @@ router.get("/trip_info", (req, res) => {
 
 router.post("/order_info", (req, res) => {
     var final={};
-    res.send("abd");
-    // connection.query("SELECT * FROM orders where sender_id = $1", [req.body.id], (err, result) => {
-    //     if (!err) {
-    //         res.send(result.rows);
-    //         final.orders = result.rows;
-            // connection.query("select * from products where id=$1", [result.rows.product_id], (err, result) => {
-            //     if(!err)
-            //     {
-            //         final.products=result.rows;
-            //     }
-            //     else {
-            //         final=-1;
-            //     }
-            // });
-        // } else {
-        //     res.send("-1");
-        // }
-        // res.send(final);
-    // });
+    // res.send("abd");
+    connection.query("SELECT * FROM orders where sender_id = $1", [req.body.id], (err, result) => {
+        if (!err) {
+            // res.send(result.rows);
+            final.orders = result.rows;
+            connection.query("select * from products where id=$1", [result.rows.product_id], (err, result) => {
+                if(!err)
+                {
+                    final.products=result.rows;
+                }
+                else {
+                    final=-1;
+                }
+            });
+        } else {
+            res.send("-1");
+        }
+        res.send(final);
+    });
 });
 
 router.post("/enter_places", (req, res) => {
