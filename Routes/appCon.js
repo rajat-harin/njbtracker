@@ -95,7 +95,7 @@ router.get("/trip_info", (req, res) => {
     );
 });
 
-router.post("/order_info", (req, res) => {
+router.get("/order_info", (req, res) => {
     var final={};
     const id1 = req.body.id;
     // res.send("abd");
