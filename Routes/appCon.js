@@ -101,15 +101,15 @@ router.post("/order_info", (req, res) => {
         if (!err) {
             // res.send(result.rows);
             final.orders = result.rows;
-            connection.query("select * from products where id=$1", [result.rows.product_id], (err, result) => {
-                if(!err)
-                {
-                    final.products=result.rows;
-                }
-                else {
-                    final=-1;
-                }
-            });
+            // connection.query("select * from products where id=$1", [result.rows.product_id], (err, result) => {
+            //     if(!err)
+            //     {
+            //         final.products=result.rows;
+            //     }
+            //     else {
+            //         final=-1;
+            //     }
+            // });
         } else {
             res.send("-1");
         }
