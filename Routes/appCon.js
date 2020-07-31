@@ -1,6 +1,7 @@
 const express = require("express");
 const connection = require("../connection");
-const moment = require("moment");
+const connection1 = require("../connection");
+
 const router = express.Router();
 
 router.post("/login", (req, res) => {
@@ -94,14 +95,37 @@ router.get("/trip_info", (req, res) => {
   );
 });
 
-router.get("/order_info", (req, res) => {
-  connection.query("SELECT * FROM orders", (err, result) => {
-    if (!err) {
-      res.send(result.rows);
-    } else {
-      res.send("-1");
+router.post("/order_info", (req, res) => {
+  var final = {};
+  const id1 = req.body.id;
+  // res.send("abd");
+  console.log(id1);
+  connection.query(
+    "SELECT * FROM orders where senders_id = $1",
+    [id1],
+    (err, result1) => {
+      if (!err) {
+        // res.send(result.rows);
+        final.orders = result1.rows;
+        const id2 = result1.rows.product_id;
+        console.log(id2);
+        connection.query(
+          "select * from products where id=$1",
+          [id2],
+          (err, result2) => {
+            if (!err) {
+              final.products = result2.rows;
+            } else {
+              final = -1;
+            }
+          }
+        );
+      } else {
+        res.send("-1");
+      }
+      res.send(final);
     }
-  });
+  );
 });
 
 router.post("/enter_places", (req, res) => {
@@ -148,11 +172,11 @@ router.post("/delivery_system", (req, res) => {
   let name = req.body.name;
   let designation = req.body.designation;
   let vehicleno = req.body.vehicleno;
-  // let login_id = req.user.id; // imp
+  let login_id = req.body.login_id;
 
   connection.query(
-    "INSERT INTO delivery_system (name, designation, vehicle_no) VALUES ($1,$2,$3)",
-    [name, designation, vehicleno],
+    "INSERT INTO delivery_system (name, designation, vehicle_no,login_id) VALUES ($1,$2,$3,$4)",
+    [name, designation, vehicleno, login_id],
     (err, result) => {
       if (!err) {
         res.send("1");
@@ -167,20 +191,20 @@ router.get("/trip_description", (req, res) => {
   let cities;
   let drivers;
   let final = {};
-  connection.query("SELECT * FROM places", (err, result) => {
+  connection.query("SELECT * FROM delivery_system", (err, result) => {
+    if (!err) {
+      drivers = result.rows;
+      final.vehicle = drivers;
+    } else {
+      res.send("-1");
+      console.log(err);
+    }
+  });
+  connection1.query("SELECT * FROM places", (err, result) => {
     if (!err) {
       cities = result.rows;
-      connection.query("SELECT * FROM delivery_system", (err, result) => {
-        if (!err) {
-          drivers = result.rows;
-          final.cities = cities;
-          final.vehicle = drivers;
-          res.send(final);
-        } else {
-          res.send("-1");
-          console.log(err);
-        }
-      });
+      final.cities = cities;
+      res.send(final);
     } else {
       res.send("-1");
       console.log(err);
