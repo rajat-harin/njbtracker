@@ -1,6 +1,6 @@
 const express = require("express");
 const connection = require("../connection");
-
+const moment = require("moment");
 const router = express.Router();
 
 router.post("/login", (req, res) => {
@@ -41,7 +41,7 @@ router.post("/register", (req, res) => {
       if (!err) {
         var id;
         "SELECT * FROM login WHERE username=$1,$2",
-          [username,password],
+          [username, password],
           (err, result) => {
             if (!err) {
               if (result.rowCount == 1) {
@@ -59,13 +59,13 @@ router.post("/register", (req, res) => {
               console.log("query error");
               res.send("-2");
             }
-          }
+          };
 
         var message = {
-          "category": category,
-          "username": username,
-          "password": password,
-          "loginid":id
+          category: category,
+          username: username,
+          password: password,
+          loginid: id,
         };
         res.send(message);
       } else {
@@ -201,6 +201,28 @@ router.post("/trip_details", (req, res) => {
       if (!err) {
         res.send("1");
       } else {
+        res.send("-1");
+      }
+    }
+  );
+});
+
+router.post("/locations", (req, res) => {
+  let { order_id, latitude, longitude } = req.body;
+
+  connection.query(
+    "INSERT INTO locations (order_id,	latitude, longitude, timest) VALUES ($1,$2,$3,$4)",
+    [
+      order_id,
+      latitude,
+      longitude,
+      moment.utc().format("YYYY-MM-DD hh:mm:ss +0530"),
+    ],
+    (err, result) => {
+      if (!err) {
+        res.send("1");
+      } else {
+        console.log(err);
         res.send("-1");
       }
     }

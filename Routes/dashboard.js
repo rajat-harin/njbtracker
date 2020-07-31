@@ -76,7 +76,6 @@ router.get("/trips", ensureAuthenticated, (req, res) => {
             cities.push(element);
           });
           orders = replaceId(orders, cities);
-          console.log(orders);
           res.render("tripData", { layout: "dashboard", cities, orders });
         } else {
           console.log(err);
@@ -143,7 +142,37 @@ router.get("/data", ensureAuthenticated, (req, res) => {
 });
 
 router.get("/maps/:id", ensureAuthenticated, (req, res) => {
-  res.render("maps", { layout: false });
+  let order_id = req.params.id;
+  let coords;
+  connection.query(
+    "SELECT * FROM locations where order_id = $1 order by timest asc",
+    [order_id],
+    (err, result) => {
+      if (!err) {
+        coords = result.rows[0];
+        res.render("maps", { layout: "dashboard", coords });
+      } else {
+        res.send("-1");
+        console.log(err);
+      }
+    }
+  );
+});
+
+router.get("/mapdata/:id", ensureAuthenticated, (req, res) => {
+  let order_id = req.params.id;
+  connection.query(
+    "SELECT * FROM locations where order_id = $1 order by timest asc",
+    [order_id],
+    (err, result) => {
+      if (!err) {
+        res.send(result.rows[0]);
+      } else {
+        res.send("-1");
+        console.log(err);
+      }
+    }
+  );
 });
 
 module.exports = router;

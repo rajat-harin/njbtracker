@@ -18,7 +18,7 @@
     {{#if orders}}
         {{#each orders}}
             <tr>
-                <th scope="row">{{this.id}}</th>
+                <th scope="row"><a href="/dashboard/maps/{{this.id}}">{{this.id}}</a></th>
                 <td>{{this.source_id}}</td>
                 <td>{{this.destination_id}}</td>
                 <td>{{this.product_id}}</td>
