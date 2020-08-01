@@ -88,7 +88,7 @@ router.post("/trip_info", (req, res) => {
             "in (select id from delivery_system where login_id=$1 ))",
         [id], (err, result) => {
             if (!err) {
-                final.product = result.rows;
+                final.product = result;
             } else {
                 res.send("-1");
             }
@@ -96,7 +96,7 @@ router.post("/trip_info", (req, res) => {
     );
     connection1.query("select * from places where id in (select source_id from orders where delivery_id in (select id from delivery_system where login_id=$1 ))", [id], (err1, result1) => {
         if (!err1) {
-            final.source = result1.rows;
+            final.source = result1;
         } else {
             res.send("-1");
         }
@@ -104,7 +104,7 @@ router.post("/trip_info", (req, res) => {
 
     connection2.query("select * from places where id in (select destination_id from orders where delivery_id in (select id from delivery_system where login_id=$1 ))", [id], (err2, result2) => {
         if (!err2) {
-            final.destination = result2.rows;
+            final.destination = result2;
         } else {
             res.send("-1");
         }
