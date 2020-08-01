@@ -96,6 +96,7 @@ router.get("/trip_info", (req, res) => {
                             " delivery_id in (select id from delivery_system where login_id=$1 ));", [id], (err2, result2) => {
                             if (!err2) {
                                 final.destination = result2.row;
+                                res.send(final);
                             } else {
                                 res.send("-1");
                             }
@@ -111,7 +112,7 @@ router.get("/trip_info", (req, res) => {
             }
         }
     );
-    res.send(final);
+
 });
 
 router.post("/order_info", (req, res) => {
