@@ -82,18 +82,14 @@ router.get("/trip_info", (req, res) => {
     let id = req.body.id;
     // let login_id = req.user.id; // imp
     var final = {};
-    connection.query("select name from products where\n" +
-        "    id in (select product_id from orders\n" +
-        "        where delivery_id in (select id from delivery_system\n" +
-        "            where login_id=$1 ))", [id], (err, result) => {
+    connection.query("select name from products where id in (select product_id from orders where delivery_id in (select id from delivery_system where login_id=$1 ))", [id], (err, result) => {
             if (!err) {
                 final.product = result.row;
-                connection.query("select * from places where id in (select source_id from orders where" +
-                    " delivery_id in (select id from delivery_system where login_id=$1 ));", [id], (err1, result1) => {
+                console.log(result);
+                connection.query("select * from places where id in (select source_id from orders where delivery_id in (select id from delivery_system where login_id=$1 ));", [id], (err1, result1) => {
                     if (!err1) {
                         final.source = result1.row;
-                        connection.query("select * from places where id in (select destination_id from orders where" +
-                            " delivery_id in (select id from delivery_system where login_id=$1 ));", [id], (err2, result2) => {
+                        connection.query("select * from places where id in (select destination_id from orders where delivery_id in (select id from delivery_system where login_id=$1 ));", [id], (err2, result2) => {
                             if (!err2) {
                                 final.destination = result2.row;
                                 res.send(final);
