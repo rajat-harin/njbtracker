@@ -1,7 +1,6 @@
 const express = require("express");
 const connection = require("../connection");
 const connection1 = require("../connection");
-const connection2 = require("../connection");
 
 const router = express.Router();
 
@@ -80,49 +79,35 @@ router.post("/register", (req, res) => {
 
 router.post("/trip_info", (req, res) => {
 
-    res.send(req.body);
-    connection2.query("select * from products where ",[],(err,result)=>{
-       console.log(result);
-       res.send(result);
-    });
-
-
-
-
-    // let id = req.body.id;
+    let id = req.body.id;
     // let login_id = req.user.id; // imp
-    // var output = {};
-    // connection.query(
-    //     "select name from products where id in (select product_id from orders where delivery_id in (select id from delivery_system where login_id=39 ))",
-    //     [id],
-    //     (err, result) =>
-    //     {
-    //         if (!err) {
-    //             output.product = result.row;
-    //             console.log(result);
-    //             res.send(output);
-                // connection.query("select * from places where id in (select source_id from orders where delivery_id in (select id from delivery_system where login_id=$1 ));", [id], (err1, result1) => {
-                //     if (!err1) {
-                //         final.source = result1.row;
-                //         connection.query("select * from places where id in (select destination_id from orders where delivery_id in (select id from delivery_system where login_id=$1 ));", [id], (err2, result2) => {
-                //             if (!err2) {
-                //                 final.destination = result2.row;
-                //                 res.send(final);
-                //             } else {
-                //                 res.send("-1");
-                //             }
-                //
-                //         });
-                //     } else {
-                //         res.send("-1");
-                //     }
-                //
-                // });
-    //         } else {
-    //             res.send("-1");
-    //         }
-    //     }
-    // );
+    var final = {};
+    connection.query("select name from products where id in (select product_id from orders where delivery_id in (select id from delivery_system where login_id=$1 ))", [id], (err, result) => {
+            if (!err) {
+                final.product = result.row;
+                console.log(result);
+                connection.query("select * from places where id in (select source_id from orders where delivery_id in (select id from delivery_system where login_id=$1 ));", [id], (err1, result1) => {
+                    if (!err1) {
+                        final.source = result1.row;
+                        connection.query("select * from places where id in (select destination_id from orders where delivery_id in (select id from delivery_system where login_id=$1 ));", [id], (err2, result2) => {
+                            if (!err2) {
+                                final.destination = result2.row;
+                                res.send(final);
+                            } else {
+                                res.send("-1");
+                            }
+
+                        });
+                    } else {
+                        res.send("-1");
+                    }
+
+                });
+            } else {
+                res.send("-1");
+            }
+        }
+    );
 
 });
 
