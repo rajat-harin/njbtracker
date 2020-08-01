@@ -87,6 +87,7 @@ router.post("/trip_info", (req, res) => {
         [id], (err, result) => {
             if (!err) {
                 final.product = result.row;
+                res.send(result.row);
                 res.send(final);
             } else {
                 res.send("-1");
