@@ -82,35 +82,34 @@ router.post("/trip_info", (req, res) => {
 
     let id = req.body.id;
     var final = {};
-    // connection.query(
-    //     "select name from products",
-    //     [id], (err, result) => {
-    //         if (!err) {
-    //             final.product = result.row;
-    //             res.send(result);
-    //             res.send(final);
-    //         } else {
-    //             res.send("-1");
-    //         }
-    //     }
-    // );
+    connection.query(
+            "select name from products where id " +
+            "in (select product_id from orders where delivery_id " +
+            "in (select id from delivery_system where login_id=$1 ))",
+        [id], (err, result) => {
+            if (!err) {
+                final.product = result.rows;
+            } else {
+                res.send("-1");
+            }
+        }
+    );
     connection1.query("select * from places where id in (select source_id from orders where delivery_id in (select id from delivery_system where login_id=$1 ))", [id], (err1, result1) => {
         if (!err1) {
-            final.source = result1;
-            res.send(final);
+            final.source = result1.rows;
         } else {
             res.send("-1");
         }
     });
 
-    // connection2.query("select * from places where id in (select destination_id from orders where delivery_id in (select id from delivery_system where login_id=$1 ))", [id], (err2, result2) => {
-    //     if (!err2) {
-    //         final.destination = result2.row;
-    //     } else {
-    //         res.send("-1");
-    //     }
-    // });
-    // res.send(final);
+    connection2.query("select * from places where id in (select destination_id from orders where delivery_id in (select id from delivery_system where login_id=$1 ))", [id], (err2, result2) => {
+        if (!err2) {
+            final.destination = result2.rows;
+        } else {
+            res.send("-1");
+        }
+    });
+    res.send(final);
 
 });
 
