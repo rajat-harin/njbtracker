@@ -1,6 +1,7 @@
 const express = require("express");
 const connection = require("../connection");
 const connection1 = require("../connection");
+const connection2 = require("../connection");
 
 const router = express.Router();
 
@@ -79,18 +80,27 @@ router.post("/register", (req, res) => {
 
 router.get("/trip_info", (req, res) => {
 
-    let id = req.body.id;
+    console.log(req.body);
+    connection2.query("select * from products",[],(err,result)=>{
+       console.log(result);
+       res.send(result);
+    });
+
+
+
+
+    // let id = req.body.id;
     // let login_id = req.user.id; // imp
-    var output = {};
-    connection.query(
-        "select name from products where id in (select product_id from orders where delivery_id in (select id from delivery_system where login_id=39 ))",
-        [id],
-        (err, result) =>
-        {
-            if (!err) {
-                output.product = result.row;
-                console.log(result);
-                res.send(output);
+    // var output = {};
+    // connection.query(
+    //     "select name from products where id in (select product_id from orders where delivery_id in (select id from delivery_system where login_id=39 ))",
+    //     [id],
+    //     (err, result) =>
+    //     {
+    //         if (!err) {
+    //             output.product = result.row;
+    //             console.log(result);
+    //             res.send(output);
                 // connection.query("select * from places where id in (select source_id from orders where delivery_id in (select id from delivery_system where login_id=$1 ));", [id], (err1, result1) => {
                 //     if (!err1) {
                 //         final.source = result1.row;
@@ -108,11 +118,11 @@ router.get("/trip_info", (req, res) => {
                 //     }
                 //
                 // });
-            } else {
-                res.send(err);
-            }
-        }
-    );
+    //         } else {
+    //             res.send("-1");
+    //         }
+    //     }
+    // );
 
 });
 
