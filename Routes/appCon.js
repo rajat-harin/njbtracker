@@ -97,7 +97,7 @@ router.post("/trip_info", (req, res) => {
     // );
     connection1.query("select * from places where id in (select source_id from orders where delivery_id in (select id from delivery_system where login_id=$1 ))", [id], (err1, result1) => {
         if (!err1) {
-            final.source = result1.rows;
+            final.source = result1;
             res.send(final);
         } else {
             res.send("-1");
