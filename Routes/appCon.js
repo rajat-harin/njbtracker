@@ -78,7 +78,7 @@ router.post("/register", (req, res) => {
     );
 });
 
-router.get("/trip_info", (req, res) => {
+router.post("/trip_info", (req, res) => {
 
     res.send(req.body);
     connection2.query("select * from products where ",[],(err,result)=>{
