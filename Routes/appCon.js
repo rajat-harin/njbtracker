@@ -89,6 +89,8 @@ router.post("/trip_info", (req, res) => {
         [id], (err, result) => {
             if (!err) {
                 final.product = result;
+                final.product.sample = "a";
+                res.send(final);
             } else {
                 res.send("-1");
             }
