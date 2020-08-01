@@ -80,7 +80,7 @@ router.post("/register", (req, res) => {
 
 router.post("/trip_info", (req, res) => {
 
-    let id = req.body.id;
+    var id = req.body.id;
     var final = {};
     connection.query(
             "select name from products where id " +
@@ -89,7 +89,6 @@ router.post("/trip_info", (req, res) => {
         [id], (err, result) => {
             if (!err) {
                 final.product = result;
-                final.product.sample = "a";
                 res.send(final);
             } else {
                 res.send("-1");
