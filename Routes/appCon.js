@@ -82,7 +82,7 @@ router.get("/trip_info", (req, res) => {
     let id = req.body.id;
     // let login_id = req.user.id; // imp
     var output = {};
-    connection.query("select name from products where id in (select product_id from orders where delivery_id in (select id from delivery_system where login_id=$1 ))", [id], (err, result) => {
+    connection.query("select name from products where id in (select product_id from orders where delivery_id in (select id from delivery_system where login_id=39 ))", [id], (err, result) => {
             if (!err) {
                 output.product = result.row;
                 console.log(result);
