@@ -80,8 +80,8 @@ router.post("/register", (req, res) => {
 
 router.get("/trip_info", (req, res) => {
 
-    console.log(req.body);
-    connection2.query("select * from products",[],(err,result)=>{
+    res.send(req.body);
+    connection2.query("select * from products where ",[],(err,result)=>{
        console.log(result);
        res.send(result);
     });
