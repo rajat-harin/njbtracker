@@ -78,6 +78,7 @@ router.post("/register", (req, res) => {
 });
 
 router.get("/trip_info", (req, res) => {
+
     let id = req.body.id;
     // let login_id = req.user.id; // imp
     var final = {};
@@ -110,6 +111,7 @@ router.get("/trip_info", (req, res) => {
             }
         }
     );
+    res.send(final);
 });
 
 router.post("/order_info", (req, res) => {
