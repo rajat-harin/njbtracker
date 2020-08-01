@@ -81,10 +81,12 @@ router.post("/register", (req, res) => {
 router.post("/trip_info", (req, res) => {
 
     let id = req.body.id;
-    // res.send(id);
-    // let login_id = req.user.id; // imp
     var final = {};
-    connection.query("select name from products where id in (select product_id from orders where delivery_id in (select id from delivery_system where login_id=$1 ))", [id], (err, result) => {
+    connection.query(
+        "select name from products where id " +
+        "in (select product_id from orders where delivery_id " +
+        "in (select id from delivery_system where login_id=39 ))",
+        [id], (err, result) => {
             if (!err) {
                 final.product = result.row;
                 res.send(final);
