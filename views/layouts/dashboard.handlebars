@@ -12,6 +12,7 @@
     <link href="/dashboard/css/style.css" rel="stylesheet">
     <link rel="stylesheet" type="text/css" href="/dashboard/css/main.css">
     <link rel="stylesheet" type="text/css" href="/dashboard/vendor/select2/select2.css">
+    <link rel="stylesheet" href="/public/dashboard/plugins/chartist/css/chartist.min.css">
     <style>
     #map{
       height:400px;
@@ -115,7 +116,7 @@
                             <i class="icon-speedometer menu-icon"></i><span class="nav-text"> Dashboard</span>
                         </a>
                         <ul aria-expanded="false">
-                            
+                            <li><a href="/dashboard">Home</a></li>
                             <li><a href="/dashboard/trips">Orders List (Trips)</a></li>
                             <li><a href="/dashboard/drivers">Resgistered Drivers</a></li>
                         </ul>
@@ -156,6 +157,14 @@
         <!--**********************************
             Content body start
         ***********************************-->
+
+    <div class="content-body" >
+
+
+     
+            <!-- row -->
+
+        
         {{{body}}}
 
     </div>
@@ -183,38 +192,133 @@
         <script src="/dashboard/js/settings.js"></script>
         <script src="/dashboard/js/gleek.js"></script>
 		<script src="/dashboard/vendor/select2/select2.js"></script>
-<script>
-		$(".selection-2").select2({
-			minimumResultsForSearch: 20,
-			dropdownParent: $('#dropDownSelect1')
-		});
-	</script>
-        <!--<script type="text/javascript">
-            var workbook, activesheet;
-            function initViz() {
-                var containerDiv = document.getElementById("vizContainer"),
-                    url = "https://public.tableau.com/views/DistaneMeasurement/Sheet1?:display_count=N&publish=yes&:origin=viz_share_link";
 
-                var options = {
-                    width: 500,
-                    height: 500,
-                    hideTabs: true,
-                    hideToolbar: true,
-                    onFirstInteractive: function () {
-                        workbook = viz.getWorkbook();
-                        activeSheet = workbook.getActiveSheet();
-                    }
-                };
-                var viz = new tableau.Viz(containerDiv, url, options);
+        <!--Google charts-->
+       <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <script type="text/javascript">
+      google.charts.load('current', {'packages':['corechart']});
+      google.charts.setOnLoadCallback(drawChart);
 
-                var containerDiv = document.getElementById("vizContainer1"),
-                    url = "https://public.tableau.com/views/DistaneMeasurement/Sheet1?:display_count=N&publish=yes&:origin=viz_share_link";
+      function drawChart() {
+        var data = google.visualization.arrayToDataTable([
+          ['Day', 'Product delivered'],
+          ['Day1',  1000],
+          ['Day2',  1170],
+          ['Day3',  890 ],
+          ['Day4',  1030]
+        ]);
 
-                var viz = new tableau.Viz(containerDiv, url, options);
-            }
-        </script> 
-         <script src="https://public.tableau.com/javascripts/api/tableau-2.min.js"></script> -->
+        var options = {
+          title: 'Product delivered vs date',
+          curveType: 'function',
+         
+          xAxis:{
+                 gridlines: {
+                   color: 'transparent'
+                         }
+          },
+          legend: { position: 'bottom' }
+        };
 
+        var chart = new google.visualization.LineChart(document.getElementById('curve_chart'));
+
+        chart.draw(data, options);
+      }
+      
+    </script>
+      <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+  <script type="text/javascript">
+    google.charts.load("current", {packages:['corechart']});
+    google.charts.setOnLoadCallback(drawChart);
+    function drawChart() {
+      var data = google.visualization.arrayToDataTable([
+        ["Day", "Orders", { role: "style" } ],
+        ["Day1", 21, "#1e88e5"],
+        ["Day2", 32, "#1e88e5"],
+        ["Day3", 11, "#1e88e5"],
+        ["Day4", 25, "#1e88e5"]
+      ]);
+
+      var view = new google.visualization.DataView(data);
+      view.setColumns([0, 1,
+                       { calc: "stringify",
+                         sourceColumn: 1,
+                         type: "string",
+                         role: "annotation" },
+                       2]);
+
+      var options = {
+        title: "orders vs date",
+        bar: {groupWidth: "95%"},
+           vAxis: {
+              gridlines: {
+                   color: 'transparent'
+                         }
+                 },
+          
+        legend: { position: "none" },
+      };
+      var chart = new google.visualization.ColumnChart(document.getElementById("columnchart_values"));
+      chart.draw(view, options);
+  }
+  </script>
+   <script type="text/javascript">
+      google.charts.load("current", {packages:["corechart"]});
+      google.charts.setOnLoadCallback(drawChart);
+      function drawChart() {
+        var data = google.visualization.arrayToDataTable([
+          ['Status', 'Status of a day'],
+          ['Shipped',     11,],
+          ['Dispatched',      6],
+          ['Pending',  2],
+        ]);
+
+        var options = {
+          title: 'Order Status',
+          pieHole: 0.4,
+          
+        };
+
+        var chart = new google.visualization.PieChart(document.getElementById('donutchart'));
+        chart.draw(data, options);
+      }
+    </script>
+ <script type="text/javascript">
+      google.charts.load('current', {'packages':['corechart']});
+      google.charts.setOnLoadCallback(drawChart);
+
+      function drawChart() {
+        var data = google.visualization.arrayToDataTable([
+          ['Age', 'Weight'],
+          [ 8,      12],
+          [ 4,      5.5],
+          [ 11,     14],
+          [ 4,      5],
+          [ 3,      3.5],
+          [ 6.5,    7]
+        ]);
+
+        var options = {
+          title: 'Age vs. Weight comparison',
+          vAxis: {
+              gridlines: {
+                   color: 'transparent'
+                         }
+                 },
+          xAxis:{
+                 gridlines: {
+                   color: 'transparent'
+                         }
+          },
+          legend: 'none'
+        };
+
+        var chart = new google.visualization.ScatterChart(document.getElementById('chart_div'));
+
+        chart.draw(data, options);
+      }
+    </script>
+     <!--Google charts end-->
 </body>
 
 </html>
