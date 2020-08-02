@@ -169,17 +169,17 @@ router.post("/order_info", (req, res) => {
         }
     );
     // const id2 = ;
-    connection1.query(
-        "select * from products where id=$1",
-        [final.orders[0].product_id],
-        (err1, result2) => {
-            if (!err1) {
-                final.products = result2.rows;
-            } else {
-                final = -1;
-            }
-        }
-    );
+    // connection1.query(
+    //     "select * from products where id=$1",
+    //     [final.orders[0].product_id],
+    //     (err1, result2) => {
+    //         if (!err1) {
+    //             final.products = result2.rows;
+    //         } else {
+    //             final = -1;
+    //         }
+    //     }
+    // );
     res.send(final);
 });
 
