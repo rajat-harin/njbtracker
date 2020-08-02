@@ -2,6 +2,7 @@ const express = require("express");
 const connection = require("../connection");
 const connection1 = require("../connection");
 
+const moment = require("moment");
 const router = express.Router();
 
 router.post("/login", (req, res) => {
@@ -41,7 +42,8 @@ router.post("/register", (req, res) => {
     (err, result) => {
       if (!err) {
         var id;
-        "SELECT * FROM login WHERE username=$1,$2",
+        connection.query(
+          "SELECT * FROM login WHERE username=$1,$2",
           [username, password],
           (err, result) => {
             if (!err) {
@@ -60,7 +62,8 @@ router.post("/register", (req, res) => {
               console.log("query error");
               res.send("-2");
             }
-          };
+          }
+        );
 
         var message = {
           category: category,
@@ -253,6 +256,48 @@ router.post("/locations", (req, res) => {
   );
 });
 
+router.get("/getCoordinates", (req, res) => {
+  var a = {};
+
+  const opencage = require("opencage-api-client");
+  var latitude;
+  opencage
+    .geocode({ q: "g h raisoni collge of engineering, nagpur, india" })
+    .then((data) => {
+      // console.log(JSON.stringify(data));
+      if (data.status.code == 200) {
+        if (data.results.length > 0) {
+          var place = data.results[0];
+          // console.log(place.formatted);
+          // console.log(place.geometry);
+          // console.log(place.annotations.timezone.name);
+          console.log("yeh sahi hai kya");
+
+          a.lat = place.geometry.lat;
+          a.lng = place.geometry.lng;
+          console.log(a);
+          latitude = a.lat + "";
+          longitude = a.lng;
+          res.send('{"lat":' + latitude + ',"lng":' + longitude + "}");
+        }
+      } else if (data.status.code == 402) {
+        console.log("hit free-trial daily limit");
+        console.log("become a customer: https://opencagedata.com/pricing");
+      } else {
+        // other possible response codes:
+        // https://opencagedata.com/api#codes
+        console.log("error", data.status.message);
+      }
+    })
+    .catch((error) => {
+      console.log("error", error.message);
+    });
+
+  // ... prints
+  // Theresienhöhe 11, 80339 Munich, Germany
+  // { lat: 48.1341651, lng: 11.5464794 }
+  // Europe/Berlin
+});
 // router.get("/order", (req, res) => {
 //   let delivery_id = req.body.id;
 //   connection.query(

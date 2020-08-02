@@ -2,6 +2,8 @@
 const express = require("express");
 const connection = require("../connection");
 const { ensureAuthenticated } = require("../config/auth");
+const moment = require("moment");
+const opencage = require("opencage-api-client");
 
 const router = express.Router();
 
@@ -69,6 +71,49 @@ router.post("/order", (req, res) => {
   let destination_id = req.body.destination_id;
   let product_id = req.body.product_id;
   let delivery_id = req.body.delivery_id;
+
+  function getAddress(id) {
+    connection.query(
+      "SELECT * FROM places WHERE id = $1",
+      [id],
+      (err, result) => {
+        if (!err) {
+          return result.rows[0];
+        } else {
+          console.log("error getting Address Details: ");
+          console.log(err);
+        }
+      }
+    );
+  }
+
+  function getLatlang(source, order_id) {
+    geocoder.geocode(source, (err, data) => {
+      if (!err) {
+        let { latitude, longitude } = data[0];
+        connection.query(
+          "INSERT INTO locations (latitude, longitude, order_id, timest)",
+          [
+            latitude,
+            longitude,
+            order_id,
+            moment.utc().format("YYYY-MM-DD hh:mm:ss +0530"),
+          ],
+          (err, result) => {
+            if (!err) {
+              return result.rows[0];
+            } else {
+              console.log("error getting Address Details: ");
+              console.log(err);
+            }
+          }
+        );
+      } else {
+        console.log("error in fetching geocodes");
+        console.log(err);
+      }
+    });
+  }
 
   connection.query(
     "INSERT INTO orders (source_id,	destination_id, product_id, delivery_id ) VALUES ($1,$2,$3,$4)",
@@ -152,7 +197,100 @@ router.post("/product", (req, res) => {
     }
   );
 });
-router.get("/driverregistration",(req,res)=>{
-  res.render("driverregistration",{layout :"dashboard"});
+router.get("/driverregistration", (req, res) => {
+  res.render("driverregistration", { layout: "dashboard" });
+});
+
+router.get("/latlong", (req, res) => {
+  function getAddress(id) {
+    connection.query(
+      "SELECT * FROM places WHERE id = $1",
+      [id],
+      (err, result) => {
+        if (!err) {
+          console.log(result.rows[0]);
+          return result.rows[0];
+        } else {
+          console.log("error getting Address Details: ");
+          console.log(err);
+        }
+      }
+    );
+  }
+
+  function getLatlang(source, order_id) {
+    geocoder.geocode(source, (err, data) => {
+      if (!err) {
+        // let { latitude, longitude } = data[0];
+        console.log(data);
+        return data[0];
+        // connection.query(
+        //   "INSERT INTO locations (latitude, longitude, order_id, timest)",
+        //   [
+        //     latitude,
+        //     longitude,
+        //     order_id,
+        //     moment.utc().format("YYYY-MM-DD hh:mm:ss +0530"),
+        //   ],
+        //   (err, result) => {
+        //     if (!err) {
+        //       return result.rows[0];
+        //     } else {
+        //       console.log("error getting Address Details: ");
+        //       console.log(err);
+        //     }
+        //   }
+        // );
+      } else {
+        console.log("error in fetching geocodes");
+        console.log(err);
+      }
+    });
+  }
+
+  // let addr = getAddress(9);
+  // let source = "";
+  // source.concat(addr.area, " ", addr.city, " ", addr.state, " ", addr.pincode);
+  let result = getLatlang("29 champs elysée paris", 15);
+});
+
+router.get("/getCoordinates", (req, res) => {
+  var a = {};
+  var latitude;
+  opencage
+    .geocode({ q: "g h raisoni collge of engineering, nagpur, india" })
+    .then((data) => {
+      if (data.status.code == 200) {
+        if (data.results.length > 0) {
+          var place = data.results[0];
+          // console.log(place.formatted);
+          // console.log(place.geometry);
+          // console.log(place.annotations.timezone.name);
+          console.log("yeh sahi hai kya");
+
+          a.lat = place.geometry.lat;
+          a.lng = place.geometry.lng;
+          console.log(a);
+          latitude = a.lat + "";
+          longitude = a.lng;
+          res.send('{"lat":' + latitude + ',"lng":' + longitude + "}");
+        }
+      } else if (data.status.code == 402) {
+        console.log("hit free-trial daily limit");
+        console.log("become a customer: https://opencagedata.com/pricing");
+      } else {
+        // other possible response codes:
+        // https://opencagedata.com/api#codes
+        console.log("error", data.status.message);
+      }
+    })
+    .catch((error) => {
+      console.log("error", error.message);
+    });
+
+  // ... prints
+  // Theresienhöhe 11, 80339 Munich, Germany
+  // { lat: 48.1341651, lng: 11.5464794 }
+  // Europe/Berlin
 });
 module.exports = router;
