@@ -84,7 +84,7 @@ router.post("/trip_info", (req, res) => {
     var final = {};
    connection.query("select source_id,destination_id,product_id from orders where delivery_id in (select id from delivery_system where login_id=39)",
        [],(err,result)=>{
-            res.send(result.rows);
+            res.send(result.rows.source_id+" "+result.rows.destination_id+" "+result.rows.product_id);
        });
 
 });
