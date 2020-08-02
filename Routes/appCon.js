@@ -89,7 +89,7 @@ router.post("/trip_info", (req, res) => {
             {
                 // res.send(result.rows);
                  result.rows.forEach((element) => {
-                     console.log(element);
+                     res.send(element);
                  })
                 // for (var i=0;i<result.length;i++)
                 // {
