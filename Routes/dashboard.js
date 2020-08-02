@@ -8,17 +8,17 @@ router.get("/", ensureAuthenticated, (req, res) => {
   let yetToReach;
   let reached;
   connection.query(
-    "SELECT count(*) FROM products WHERE product_state like 'On%'",
+    "SELECT count(*) FROM acknowledgement WHERE ack like 'On%'",
     (err, result) => {
       if (!err) {
         onWay = result.rows[0].count;
         connection.query(
-          "SELECT count(*) FROM products WHERE product_state like 'Yet%'",
+          "SELECT count(*) FROM acknowledgement WHERE ack like 'Yet%'",
           (err, result) => {
             if (!err) {
               yetToReach = result.rows[0].count;
               connection.query(
-                "SELECT count(*) FROM products WHERE product_state like 'Reach%'",
+                "SELECT count(*) FROM acknowledgement WHERE ack like 'Reach%'",
                 (err, result) => {
                   if (!err) {
                     reached = result.rows[0].count;
