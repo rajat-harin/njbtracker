@@ -87,15 +87,16 @@ router.post("/trip_info", (req, res) => {
             // res.send(result.rows[0].source_id+" "+result.rows[0].destination_id+" "+result.rows[0].product_id+" "+id);
             if(!err)
             {
-                for (var i=0;i<result.length;i++)
-                {
-                    var s=result.rows[i].source_id;
-                    var d=result.rows[i].destination_id;
-                    res.send(s+" "+d);
-                    connection1.query("select * from places where id =$1 or id=$2",[s,d],(err1,result1)=>{
-                       res.send(result1.rows);
-                    });
-                }
+                res.send(result.length);
+                // for (var i=0;i<result.length;i++)
+                // {
+                //     var s=result.rows[i].source_id;
+                //     var d=result.rows[i].destination_id;
+                //     res.send(s+" "+d);
+                //     connection1.query("select * from places where id =$1 or id=$2",[s,d],(err1,result1)=>{
+                //        res.send(result1.rows);
+                //     });
+                // }
 
             }
             else
