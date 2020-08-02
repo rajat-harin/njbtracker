@@ -268,11 +268,10 @@
       function drawChart() {
         var data = google.visualization.arrayToDataTable([
           ['Status', 'Status of a day'],
-          ['Shipped',     11,],
-          ['Dispatched',      6],
-          ['Pending',  2],
+          ['Shipped',     {{reached}},],
+          ['Dispatched',      {{onWay}}],
+          ['Pending',  {{yetToReach}}],
         ]);
-
         var options = {
           title: 'Order Status',
           pieHole: 0.4,
