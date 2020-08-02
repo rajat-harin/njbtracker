@@ -82,21 +82,24 @@ router.post("/trip_info", (req, res) => {
 
     var id = req.body.id;
     var final = {};
-   connection.query("select source_id,destination_id,product_id from orders where delivery_id in (select id from delivery_system where login_id=$1)",
+   connection.query("select source_id,destination_id,product_id from orders where delivery_id in (select id from delivery_system where login_id=39)",
        [id],(err,result)=>{
             // res.send(result.rows[0].source_id+" "+result.rows[0].destination_id+" "+result.rows[0].product_id+" "+id);
             if(!err)
             {
                 // res.send(result.rows);
-                for (var i=0;i<result.length;i++)
-                {
-                    var s=result.rows[i].source_id;
-                    var d=result.rows[i].destination_id;
-                    res.send(s+" "+d);
-                    connection1.query("select * from places where id =$1 or id=$2",[s,d],(err1,result1)=>{
-                       res.send(result1.rows);
-                    });
-                }
+                 result.rows.forEach((element) => {
+                     console.log(element);
+                 })
+                // for (var i=0;i<result.length;i++)
+                // {
+                //     var s=result.rows[i].source_id;
+                //     var d=result.rows[i].destination_id;
+                //     res.send(s+" "+d);
+                //     connection1.query("select * from places where id =$1 or id=$2",[s,d],(err1,result1)=>{
+                //        res.send(result1.rows);
+                //     });
+                // }
 
             }
             else
