@@ -88,11 +88,13 @@ router.post("/trip_info", (req, res) => {
             if(!err)
             {
                 result.forEach(function(r) {
-                    var s=r.source_id;
-                    var d=r.destination_id;
-                    connection1.query("select * from places where id =$1 or id=$2",[s,d],(err1,result1)=>{
-                       res.send(result1.rows);
-                    });
+                    res.send(r);
+                    // var s=r.source_id;
+                    // var d=r.destination_id;
+                    // res.send(s+" "+d);
+                    // connection1.query("select * from places where id =$1 or id=$2",[s,d],(err1,result1)=>{
+                    //    res.send(result1.rows);
+                    // });
                 });
             }
             else
