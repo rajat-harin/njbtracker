@@ -82,9 +82,10 @@ router.post("/register", (req, res) => {
 router.post("/trip_info", (req, res) => {
   var id = req.body.id;
   var final = {};
+  let temp = [];
   let array = [];
   connection.query(
-    "select source_id,destination_id,product_id, delivery_id from orders where delivery_id in (select id from delivery_system where login_id=$1)",
+    "select source_id,destination_id,product_id, id from orders where delivery_id in (select id from delivery_system where login_id=$1)",
     [id],
     (err, result) => {
       if (!err) {
@@ -95,24 +96,24 @@ router.post("/trip_info", (req, res) => {
             [element.source_id, element.destination_id],
             (err, result2) => {
               if (!err) {
-                console.log(result2.rows[0][0]);
+                result2.rows.forEach((elem) => {
+                  temp.push(elem);
+                });
+                // console.log(temp);
                 connection.query(
                   "select name from products where id=$1",
                   [element.product_id],
                   (err, result3) => {
                     if (!err) {
-                      final.delivery_id = element.delivery_id;
+                      console.log("loop");
+                      final.order_id = element.id;
                       //ye niche wala if else block ka logic galat h so naya bana lena
+                      final.source = temp.shift();
+                      final.destination = temp.shift();
 
-                      if (result2.rows[0].id == element.source_id) {
-                        final.source = result2.rows[0];
-                        final.destination = result2.rows[1];
-                      } else {
-                        final.source = result2.rows[1];
-                        final.destination = result2.rows[0];
-                      }
                       final.product = result3.rows[0].name;
                       array.push(final);
+                      console.log(array);
                       //neche wale ko mt chedna
                       len = len - 1;
                       if (len == 0) {
@@ -161,7 +162,7 @@ router.post("/order_info", (req, res) => {
     (err, result1) => {
       if (!err) {
         // res.send(result.rows);
-        final={};
+        final = {};
         final.orders = result1.rows;
         const id2 = result1.rows[0].product_id;
         console.log(id2);
@@ -175,7 +176,6 @@ router.post("/order_info", (req, res) => {
               console.log(final);
 
               res.send(final);
-
             } else {
               final = -1;
             }
@@ -184,7 +184,6 @@ router.post("/order_info", (req, res) => {
       } else {
         res.send("-1");
       }
-
     }
   );
 });

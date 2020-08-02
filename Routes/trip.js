@@ -168,6 +168,7 @@ router.post("/order", (req, res) => {
           }
         );
       } else {
+        console.log(err);
         res.send("0");
       }
     }
@@ -238,6 +239,7 @@ router.post("/product", (req, res) => {
       if (!err) {
         res.send(result);
       } else {
+        console.log(err);
         res.send("0");
       }
     }
