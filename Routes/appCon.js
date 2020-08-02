@@ -81,7 +81,7 @@ router.post("/register", (req, res) => {
 
 router.post("/trip_info", (req, res) => {
   var id = req.body.id;
-  var final = {};
+  let final = {};
   let temp = [];
   let array = [];
   connection.query(
@@ -112,8 +112,9 @@ router.post("/trip_info", (req, res) => {
                       final.destination = temp.shift();
 
                       final.product = result3.rows[0].name;
+                      console.log(final);
                       array.push(final);
-                      console.log(array);
+                      final = {};
                       //neche wale ko mt chedna
                       len = len - 1;
                       if (len == 0) {
