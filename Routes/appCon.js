@@ -87,7 +87,7 @@ router.post("/trip_info", (req, res) => {
             // res.send(result.rows[0].source_id+" "+result.rows[0].destination_id+" "+result.rows[0].product_id+" "+id);
             if(!err)
             {
-                res.send(result1.rows);
+                res.send(result.rows);
                 var s=result.rows[0].source_id;
                 var d=result.rows[0].destination_id;
                 connection1.query("select * from places where id =$1 or id=$2",[s,d],(err1,result1)=>{
