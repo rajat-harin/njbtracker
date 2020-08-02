@@ -1,6 +1,7 @@
 const express = require("express");
 const connection = require("../connection");
 const connection1 = require("../connection");
+const connection2 = require("../connection");
 
 const moment = require("moment");
 const router = express.Router();
@@ -42,8 +43,7 @@ router.post("/register", (req, res) => {
     (err, result) => {
       if (!err) {
         var id;
-        connection.query(
-          "SELECT * FROM login WHERE username=$1,$2",
+        "SELECT * FROM login WHERE username=$1,$2",
           [username, password],
           (err, result) => {
             if (!err) {
@@ -62,8 +62,7 @@ router.post("/register", (req, res) => {
               console.log("query error");
               res.send("-2");
             }
-          }
-        );
+          };
 
         var message = {
           category: category,
@@ -80,16 +79,64 @@ router.post("/register", (req, res) => {
   );
 });
 
-router.get("/trip_info", (req, res) => {
-  let id = req.body.id;
-  // let login_id = req.user.id; // imp
-
+router.post("/trip_info", (req, res) => {
+  var id = req.body.id;
+  var final = {};
+  let array = [];
   connection.query(
-    "SELECT * FROM orders WHERE delivery_id = $1",
+    "select source_id,destination_id,product_id, delivery_id from orders where delivery_id in (select id from delivery_system where login_id=$1)",
     [id],
     (err, result) => {
       if (!err) {
-        res.send(result.rows);
+        let len = result.rows.length;
+        result.rows.forEach((element) => {
+          connection.query(
+            "select * from places where id=$1 or id = $2",
+            [element.source_id, element.destination_id],
+            (err, result2) => {
+              if (!err) {
+                connection.query(
+                  "select name from products where id=$1",
+                  [element.product_id],
+                  (err, result3) => {
+                    if (!err) {
+                      final.delivery_id = element.delivery_id;
+                      if (result2.rows[0].id == element.source_id) {
+                        final.source = result2.rows[0];
+                        final.destination = result2.rows[1];
+                      } else {
+                        final.source = result2.rows[1];
+                        final.destination = result2.rows[0];
+                      }
+                      final.product = result3.rows[0].name;
+                      array.push(final);
+                      len = len - 1;
+                      if (len == 0) {
+                        res.send(array);
+                      }
+                    } else {
+                      console.log(err);
+                      res.send("-1");
+                    }
+                  }
+                );
+              } else {
+                console.log(err);
+                res.send("-1");
+              }
+            }
+          );
+        });
+        console.log(array);
+        // for (var i=0;i<result.length;i++)
+        // {
+        //     var s=result.rows[i].source_id;
+        //     var d=result.rows[i].destination_id;
+        //     res.send(s+" "+d);
+        //     connection1.query("select * from places where id =$1 or id=$2",[s,d],(err1,result1)=>{
+        //        res.send(result1.rows);
+        //     });
+        // }
       } else {
         console.log(err);
         res.send("-1");

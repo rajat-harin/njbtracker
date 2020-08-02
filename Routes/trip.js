@@ -78,7 +78,19 @@ router.post("/order", (req, res) => {
       [id],
       (err, result) => {
         if (!err) {
-          return result.rows[0];
+          let address = "";
+          address.concat(
+            result.rows[0].area,
+            " , ",
+            result.rows[0].city,
+            " , ",
+            result.rows[0].state,
+            " , ",
+            result.rows[0].country,
+            " , ",
+            result.rows[0].pincode
+          );
+          return address;
         } else {
           console.log("error getting Address Details: ");
           console.log(err);
@@ -87,32 +99,51 @@ router.post("/order", (req, res) => {
     );
   }
 
-  function getLatlang(source, order_id) {
-    geocoder.geocode(source, (err, data) => {
-      if (!err) {
-        let { latitude, longitude } = data[0];
-        connection.query(
-          "INSERT INTO locations (latitude, longitude, order_id, timest)",
-          [
-            latitude,
-            longitude,
-            order_id,
-            moment.utc().format("YYYY-MM-DD hh:mm:ss +0530"),
-          ],
-          (err, result) => {
-            if (!err) {
-              return result.rows[0];
-            } else {
-              console.log("error getting Address Details: ");
-              console.log(err);
-            }
+  function insertLatlang(address, order_id) {
+    opencage
+      .geocode({ q: source })
+      .then((data) => {
+        if (data.status.code == 200) {
+          if (data.results.length > 0) {
+            var place = data.results[0];
+            // console.log(place.formatted);
+            // console.log(place.geometry);
+            // console.log(place.annotations.timezone.name);
+            a.lat = place.geometry.lat;
+            a.lng = place.geometry.lng;
+            console.log(a);
+            latitude = a.lat;
+            longitude = a.lng;
+            connection.query(
+              "INSERT INTO locations (latitude, longitude, order_id, timest)",
+              [
+                latitude,
+                longitude,
+                order_id,
+                moment.utc().format("YYYY-MM-DD hh:mm:ss +0530"),
+              ],
+              (err, result) => {
+                if (!err) {
+                  console.log(place.geometry);
+                } else {
+                  console.log("error getting Address Details: ");
+                  console.log(err);
+                }
+              }
+            );
           }
-        );
-      } else {
-        console.log("error in fetching geocodes");
-        console.log(err);
-      }
-    });
+        } else if (data.status.code == 402) {
+          console.log("hit free-trial daily limit");
+          console.log("become a customer: https://opencagedata.com/pricing");
+        } else {
+          // other possible response codes:
+          // https://opencagedata.com/api#codes
+          console.log("error", data.status.message);
+        }
+      })
+      .catch((error) => {
+        console.log("error", error.message);
+      });
   }
 
   connection.query(
