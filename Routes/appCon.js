@@ -161,22 +161,24 @@ router.post("/order_info", (req, res) => {
       if (!err) {
         // res.send(result.rows);
         final.orders = result1.rows;
-        const id2 = result1.rows[0].product_id;
+
         console.log(id2);
-        connection1.query(
+      } else {
+        res.send("-1");
+      }
+      const id2 = final.orders[0].product_id;
+      connection1.query(
           "select * from products where id=$1",
           [id2],
-          (err, result2) => {
-            if (!err) {
+          (err1, result2) => {
+            if (!err1) {
               final.products = result2.rows;
             } else {
               final = -1;
             }
           }
-        );
-      } else {
-        res.send("-1");
-      }
+      );
+
       res.send(final);
     }
   );
