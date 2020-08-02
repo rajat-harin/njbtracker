@@ -87,7 +87,7 @@ router.post("/trip_info", (req, res) => {
             // res.send(result.rows[0].source_id+" "+result.rows[0].destination_id+" "+result.rows[0].product_id+" "+id);
             if(!err)
             {
-                res.send(result.length);
+                res.send(result.rows);
                 // for (var i=0;i<result.length;i++)
                 // {
                 //     var s=result.rows[i].source_id;
