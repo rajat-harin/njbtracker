@@ -99,7 +99,7 @@ router.post("/order", (req, res) => {
     );
   }
 
-  function insertLatlang(address, order_id) {
+  function insertLatlang(source, order_id) {
     opencage
       .geocode({ q: source })
       .then((data) => {
@@ -151,7 +151,22 @@ router.post("/order", (req, res) => {
     [source_id, destination_id, product_id, delivery_id],
     (err, result) => {
       if (!err) {
-        res.send(req.body);
+        connection.query(
+          "SELECT id FROM orders where source_id = $1 and destination_id = $2 and product_id = $3 and delivery_id = $4",
+          [source_id, destination_id, product_id, delivery_id],
+          (err, result1) => {
+            if (!err) {
+              let source = getAddress(source_id);
+              let dest = getAddress(destination_id);
+              insertLatlang(source, result1.rows[0].id);
+              insertLatlang(dest, result1.rows[0].id);
+              res.send(req.body);
+            } else {
+              console.log(err);
+              res.sendStatus(500);
+            }
+          }
+        );
       } else {
         res.send("0");
       }

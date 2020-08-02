@@ -149,8 +149,26 @@ router.get("/maps/:id", ensureAuthenticated, (req, res) => {
     [order_id],
     (err, result) => {
       if (!err) {
-        coords = result.rows[0];
-        res.render("maps", { layout: "dashboard", coords });
+        let source = result.rows[0];
+        let dest = result.rows[1];
+        connection.query(
+          "SELECT * FROM locations where order_id = $1 order by timest desc",
+          [order_id],
+          (err, result1) => {
+            if (!err) {
+              let current = result1.rows[0];
+              res.render("maps", {
+                layout: "dashboard",
+                source,
+                dest,
+                current,
+              });
+            } else {
+              res.send("-1");
+              console.log(err);
+            }
+          }
+        );
       } else {
         res.send("-1");
         console.log(err);
