@@ -101,6 +101,8 @@ router.post("/trip_info", (req, res) => {
                   (err, result3) => {
                     if (!err) {
                       final.delivery_id = element.delivery_id;
+                      //ye niche wala if else block ka logic galat h so naya bana lena
+
                       if (result2.rows[0].id == element.source_id) {
                         final.source = result2.rows[0];
                         final.destination = result2.rows[1];
@@ -110,10 +112,12 @@ router.post("/trip_info", (req, res) => {
                       }
                       final.product = result3.rows[0].name;
                       array.push(final);
+                      //neche wale ko mt chedna
                       len = len - 1;
                       if (len == 0) {
                         res.send(array);
                       }
+                      //upar wale ko mt chedna
                     } else {
                       console.log(err);
                       res.send("-1");
