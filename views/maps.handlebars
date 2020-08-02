@@ -18,8 +18,8 @@
     function initMap(){
       // Map options
       var options = {
-        zoom:8,
-        center:{lat:Number({{coords.latitude}}),lng: Number({{coords.longitude}})}
+        zoom:6,
+        center:{lat:Number({{current.latitude}}),lng: Number({{current.longitude}})}
       }
 
       // New map
@@ -32,16 +32,18 @@
       // Array of markers
       var markers = [
         {
-          coords:{lat:Number({{coords.latitude}}),lng: Number({{coords.longitude}})},
+          coords:{lat:Number({{source.latitude}}),lng: Number({{source.longitude}})},
           iconImage:'https://developers.google.com/maps/documentation/javascript/examples/full/images/beachflag.png',
-          content:'<h1>Lynn MA</h1>'
+          content:'<h1>Source</h1>'
         },
         {
-          coords:{lat:42.8584,lng:-70.9300},
-          content:'<h1>Amesbury MA</h1>'
+           coords:{lat:Number({{dest.latitude}}),lng: Number({{dest.longitude}})},
+          iconImage:'https://developers.google.com/maps/documentation/javascript/examples/full/images/beachflag.png',
+          content:'<h1>Destination</h1>'
         },
         {
-          coords:{lat:42.7762,lng:-71.0773}
+          coords:{lat:Number({{current.latitude}}),lng: Number({{current.longitude}})},
+          content:'<h1>Current</h1>'
         }
       ];
 

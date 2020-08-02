@@ -1,7 +1,9 @@
 const express = require("express");
 const connection = require("../connection");
 const connection1 = require("../connection");
+const connection2 = require("../connection");
 
+const moment = require("moment");
 const router = express.Router();
 
 router.post("/login", (req, res) => {
@@ -77,16 +79,68 @@ router.post("/register", (req, res) => {
   );
 });
 
-router.get("/trip_info", (req, res) => {
-  let id = req.body.id;
-  // let login_id = req.user.id; // imp
-
+router.post("/trip_info", (req, res) => {
+  var id = req.body.id;
+  var final = {};
+  let array = [];
   connection.query(
-    "SELECT * FROM orders WHERE delivery_id = $1",
+    "select source_id,destination_id,product_id, delivery_id from orders where delivery_id in (select id from delivery_system where login_id=$1)",
     [id],
     (err, result) => {
       if (!err) {
-        res.send(result.rows);
+        let len = result.rows.length;
+        result.rows.forEach((element) => {
+          connection.query(
+            "select * from places where id=$1 or id = $2",
+            [element.source_id, element.destination_id],
+            (err, result2) => {
+              if (!err) {
+                connection.query(
+                  "select name from products where id=$1",
+                  [element.product_id],
+                  (err, result3) => {
+                    if (!err) {
+                      final.delivery_id = element.delivery_id;
+                      //ye niche wala if else block ka logic galat h so naya bana lena
+
+                      if (result2.rows[0].id == element.source_id) {
+                        final.source = result2.rows[0];
+                        final.destination = result2.rows[1];
+                      } else {
+                        final.source = result2.rows[1];
+                        final.destination = result2.rows[0];
+                      }
+                      final.product = result3.rows[0].name;
+                      array.push(final);
+                      //neche wale ko mt chedna
+                      len = len - 1;
+                      if (len == 0) {
+                        res.send(array);
+                      }
+                      //upar wale ko mt chedna
+                    } else {
+                      console.log(err);
+                      res.send("-1");
+                    }
+                  }
+                );
+              } else {
+                console.log(err);
+                res.send("-1");
+              }
+            }
+          );
+        });
+        console.log(array);
+        // for (var i=0;i<result.length;i++)
+        // {
+        //     var s=result.rows[i].source_id;
+        //     var d=result.rows[i].destination_id;
+        //     res.send(s+" "+d);
+        //     connection1.query("select * from places where id =$1 or id=$2",[s,d],(err1,result1)=>{
+        //        res.send(result1.rows);
+        //     });
+        // }
       } else {
         console.log(err);
         res.send("-1");
@@ -253,6 +307,48 @@ router.post("/locations", (req, res) => {
   );
 });
 
+router.get("/getCoordinates", (req, res) => {
+  var a = {};
+
+  const opencage = require("opencage-api-client");
+  var latitude;
+  opencage
+    .geocode({ q: "g h raisoni collge of engineering, nagpur, india" })
+    .then((data) => {
+      // console.log(JSON.stringify(data));
+      if (data.status.code == 200) {
+        if (data.results.length > 0) {
+          var place = data.results[0];
+          // console.log(place.formatted);
+          // console.log(place.geometry);
+          // console.log(place.annotations.timezone.name);
+          console.log("yeh sahi hai kya");
+
+          a.lat = place.geometry.lat;
+          a.lng = place.geometry.lng;
+          console.log(a);
+          latitude = a.lat + "";
+          longitude = a.lng;
+          res.send('{"lat":' + latitude + ',"lng":' + longitude + "}");
+        }
+      } else if (data.status.code == 402) {
+        console.log("hit free-trial daily limit");
+        console.log("become a customer: https://opencagedata.com/pricing");
+      } else {
+        // other possible response codes:
+        // https://opencagedata.com/api#codes
+        console.log("error", data.status.message);
+      }
+    })
+    .catch((error) => {
+      console.log("error", error.message);
+    });
+
+  // ... prints
+  // Theresienhöhe 11, 80339 Munich, Germany
+  // { lat: 48.1341651, lng: 11.5464794 }
+  // Europe/Berlin
+});
 // router.get("/order", (req, res) => {
 //   let delivery_id = req.body.id;
 //   connection.query(
