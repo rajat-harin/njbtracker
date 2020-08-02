@@ -82,7 +82,7 @@ router.post("/trip_info", (req, res) => {
 
     var id = req.body.id;
     var final = {};
-   connection.query("select source_id,destination_id,product_id from orders where delivery_id in (select id from delivery_system where login_id=39)",
+   connection.query("select source_id,destination_id,product_id from orders where delivery_id in (select id from delivery_system where login_id=$1)",
        [id],(err,result)=>{
             // res.send(result.rows[0].source_id+" "+result.rows[0].destination_id+" "+result.rows[0].product_id+" "+id);
             if(!err)
