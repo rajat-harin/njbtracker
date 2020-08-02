@@ -84,6 +84,8 @@ router.post("/trip_info", (req, res) => {
   let final = {};
   let temp = [];
   let array = [];
+  //change
+
   connection.query(
     "select source_id,destination_id,product_id, id from orders where delivery_id in (select id from delivery_system where login_id=$1)",
     [id],
