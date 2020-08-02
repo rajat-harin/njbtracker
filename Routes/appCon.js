@@ -82,9 +82,22 @@ router.post("/trip_info", (req, res) => {
 
     var id = req.body.id;
     var final = {};
-   connection.query("select source_id,destination_id,product_id from orders where delivery_id in (select id from delivery_system where login_id=39)",
-       [],(err,result)=>{
-            res.send(result.rows[0].source_id+" "+result.rows[0].destination_id+" "+result.rows[0].product_id+" "+id);
+   connection.query("select source_id,destination_id,product_id from orders where delivery_id in (select id from delivery_system where login_id=$1)",
+       [id],(err,result)=>{
+            // res.send(result.rows[0].source_id+" "+result.rows[0].destination_id+" "+result.rows[0].product_id+" "+id);
+            var s=result.rows[0].source_id;
+            var d=result.rows[0].destination_id;
+            if(!err)
+            {
+                connection1.query("select * from places where id =$1 or id=$2",[s,d],(err1,result1)=>{
+                   res.send(result1.rows);
+                });
+
+            }
+            else
+            {
+                res.send("-1");
+            }
        });
 
 });
