@@ -121,7 +121,7 @@
                             <li><a href="/dashboard/drivers">Resgistered Drivers</a></li>
                         </ul>
                     </li>
-                    <li class="nav-label">Trip & Tracking</li>
+                    <li class="nav-label">Trip Details</li>
 					    <li >
                         <a class="has-arrow" href="javascript:void()" aria-expanded="false">
                             <i class="icon-note menu-icon"></i><span class="nav-text"> Data Entry</span>
@@ -132,11 +132,7 @@
                             <li><a href="/register/places">Trip Description</a></li>
                             <li><a href="/register/order">Order Description</a></li>
                         </ul>
-                        <li>
-                            <a href="/register/livetracking" aria-expanded="false">
-                                <i class="icon-graph menu-icon"></i><span class="nav-text">Live Tracking</span>
-                            </a>
-                        </li>
+                   
                     </li>
                     <li class="nav-label">Registration</li>
                     <li >
@@ -192,6 +188,12 @@
         <script src="/dashboard/js/settings.js"></script>
         <script src="/dashboard/js/gleek.js"></script>
 		<script src="/dashboard/vendor/select2/select2.js"></script>
+		<script>
+		$(".selection-2").select2({
+			minimumResultsForSearch: 20,
+			dropdownParent: $('#dropDownSelect1')
+		});
+	</script>
 
         <!--Google charts-->
        <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
