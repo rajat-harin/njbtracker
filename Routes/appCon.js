@@ -82,36 +82,10 @@ router.post("/trip_info", (req, res) => {
 
     var id = req.body.id;
     var final = {};
-    // connection.query(
-    //         "select name from products where id " +
-    //         "in (select product_id from orders where delivery_id " +
-    //         "in (select id from delivery_system where login_id=$1 ))",
-    //     [id], (err, result) => {
-    //         if (!err) {
-    //             final.product = result;
-    //             res.send(final);
-    //         } else {
-    //             res.send("-1");
-    //         }
-    //     }
-    // );
-    connection1.query("select * from places where id in (select source_id from orders where delivery_id in (select id from delivery_system where login_id=$1 ))", [id], (err1, result1) => {
-        if (!err1) {
-            final = result1;
-            res.send(result1);
-        } else {
-            res.send("-1");
-        }
-    });
-
-    connection2.query("select * from places where id in (select destination_id from orders where delivery_id in (select id from delivery_system where login_id=$1 ))", [id], (err2, result2) => {
-        if (!err2) {
-            final.destination = result2;
-        } else {
-            res.send("-1");
-        }
-    });
-    res.send(final);
+   connection.query("select source_id,destination_id,product_id from orders where delivery_id in (select id from delivery_system where login_id=39)",
+       [],(err,result)=>{
+            res.send(result.rows);
+       });
 
 });
 
