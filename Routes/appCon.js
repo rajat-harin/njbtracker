@@ -161,7 +161,7 @@ router.post("/order_info", (req, res) => {
       if (!err) {
         // res.send(result.rows);
         final.orders = result1.rows;
-        const id2 = result1.rows.product_id;
+        const id2 = result1.rows[0].product_id;
         console.log(id2);
         connection1.query(
           "select * from products where id=$1",
