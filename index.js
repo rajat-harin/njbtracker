@@ -77,6 +77,11 @@ app.post("/", (req, res) => {
 app.get("/", (req, res) => {
   res.render("home", { layout: "landing" });
 });
+//logout request handler
+app.get("/logout", function (req, res) {
+  req.logout();
+  res.redirect("/");
+});
 
 //SERVER LISTEN
 

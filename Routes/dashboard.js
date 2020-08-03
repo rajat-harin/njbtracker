@@ -7,6 +7,7 @@ router.get("/", ensureAuthenticated, (req, res) => {
   let onWay;
   let yetToReach;
   let reached;
+  let user = req.user;
   connection.query(
     "SELECT count(*) FROM acknowledgement WHERE ack like 'On%'",
     (err, result) => {
@@ -27,6 +28,7 @@ router.get("/", ensureAuthenticated, (req, res) => {
                       onWay,
                       yetToReach,
                       reached,
+                      user,
                     });
                   } else {
                     res.sendStatus(500);
