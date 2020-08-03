@@ -162,7 +162,7 @@ router.post("/order_info", (req, res) => {
     //change
 
     connection.query(
-        "select source_id,destination_id,product_id, id from orders where senders_id in (select id from login where id=$1)",
+        "select source_id,destination_id,product_id, id,delivery_id from orders where senders_id in (select id from login where id=$1)",
         [id],
         (err, result) => {
             if (!err) {
