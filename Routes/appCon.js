@@ -229,6 +229,81 @@ router.post("/order_info", (req, res) => {
   );
 });
 
+router.post("/recieve_info", (req, res) => {
+    var id = req.body.id;
+    let final = {};
+    let temp = [];
+    let array = [];
+    //change
+
+    connection.query(
+        "select source_id,destination_id,product_id, id from orders where reciever_id in (select id from login where id=$1)",
+        [id],
+        (err, result) => {
+            if (!err) {
+                let len = result.rows.length;
+                result.rows.forEach((element) => {
+                    connection.query(
+                        "select * from places where id=$1 or id = $2",
+                        [element.source_id, element.destination_id],
+                        (err, result2) => {
+                            if (!err) {
+                                result2.rows.forEach((elem) => {
+                                    temp.push(elem);
+                                });
+                                // console.log(temp);
+                                connection.query(
+                                    "select name from products where id=$1",
+                                    [element.product_id],
+                                    (err, result3) => {
+                                        if (!err) {
+                                            console.log("loop");
+                                            final.order_id = element.id;
+                                            //ye niche wala if else block ka logic galat h so naya bana lena
+                                            final.source = temp.shift();
+                                            final.destination = temp.shift();
+
+                                            final.product = result3.rows[0].name;
+                                            console.log(final);
+                                            array.push(final);
+                                            final = {};
+                                            //neche wale ko mt chedna
+                                            len = len - 1;
+                                            if (len == 0) {
+                                                res.send(array);
+                                            }
+                                            //upar wale ko mt chedna
+                                        } else {
+                                            console.log(err);
+                                            res.send("-1");
+                                        }
+                                    }
+                                );
+                            } else {
+                                console.log(err);
+                                res.send("-1");
+                            }
+                        }
+                    );
+                });
+                console.log(array);
+                // for (var i=0;i<result.length;i++)
+                // {
+                //     var s=result.rows[i].source_id;
+                //     var d=result.rows[i].destination_id;
+                //     res.send(s+" "+d);
+                //     connection1.query("select * from places where id =$1 or id=$2",[s,d],(err1,result1)=>{
+                //        res.send(result1.rows);
+                //     });
+                // }
+            } else {
+                console.log(err);
+                res.send("-1");
+            }
+        }
+    );
+});
+
 router.post("/enter_places", (req, res) => {
   let area = req.body.area;
   let place_type = req.body.place_type;
