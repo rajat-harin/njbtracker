@@ -158,6 +158,7 @@ router.post("/order_info", (req, res) => {
     var id = req.body.id;
     let final = {};
     let temp = [];
+    let temp1=[];
     let array = [];
     //change
 
