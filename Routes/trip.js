@@ -31,40 +31,46 @@ router.get("/order", (req, res) => {
   let cities = [];
   let products;
   let deliver = [];
-  connection.query("SELECT id, city FROM places", (err, result) => {
-    if (!err) {
-      result.rows.forEach((element) => {
-        cities.push(element);
-      });
-      connection.query("SELECT id, name FROM products", (err, result) => {
-        if (!err) {
-          products = result.rows;
-          connection.query(
-            "SELECT id, vehicle_no FROM delivery_system",
-            (err, result, fields) => {
-              if (!err) {
-                result.rows.forEach((element) => {
-                  deliver.push(element);
-                });
-                res.render("trip", {
-                  layout: "dashboard",
-                  cities,
-                  products,
-                  deliver,
-                });
-              } else {
-                res.sendStatus(500);
+  connection.query(
+    "SELECT id, area, city, state FROM places",
+    (err, result) => {
+      if (!err) {
+        result.rows.forEach((element) => {
+          cities.push(element);
+        });
+        connection.query("SELECT id, name FROM products", (err, result) => {
+          if (!err) {
+            products = result.rows;
+            connection.query(
+              "SELECT id, vehicle_no FROM delivery_system",
+              (err, result, fields) => {
+                if (!err) {
+                  result.rows.forEach((element) => {
+                    deliver.push(element);
+                  });
+                  res.render("trip", {
+                    layout: "dashboard",
+                    cities,
+                    products,
+                    deliver,
+                  });
+                } else {
+                  console.log(err);
+                  res.sendStatus(500);
+                }
               }
-            }
-          );
-        } else {
-          res.sendStatus(500);
-        }
-      });
-    } else {
-      res.sendStatus(500);
+            );
+          } else {
+            console.log(err);
+            res.sendStatus(500);
+          }
+        });
+      } else {
+        console.log(err);
+        res.sendStatus(500);
+      }
     }
-  });
+  );
 });
 router.post("/order", (req, res) => {
   let source_id = req.body.source_id;
@@ -142,12 +148,13 @@ router.post("/order", (req, res) => {
         }
       })
       .catch((error) => {
+        console.log("geocode query error");
         console.log("error", error.message);
       });
   }
 
   connection.query(
-    "INSERT INTO orders (source_id,	destination_id, product_id, delivery_id ) VALUES ($1,$2,$3,$4)",
+    "INSERT INTO orders (source_id,	destination_id, product_id, delivery_id,timest ) VALUES ($1,$2,$3,$4, now())",
     [source_id, destination_id, product_id, delivery_id],
     (err, result) => {
       if (!err) {
@@ -160,7 +167,7 @@ router.post("/order", (req, res) => {
               let dest = getAddress(destination_id);
               insertLatlang(source, result1.rows[0].id);
               insertLatlang(dest, result1.rows[0].id);
-              res.send(req.body);
+              res.redirect("/dashboard");
             } else {
               console.log(err);
               res.sendStatus(500);
@@ -190,7 +197,7 @@ router.post("/deliver", (req, res) => {
     [name, designation, vehicleno],
     (err, result) => {
       if (!err) {
-        res.send(req.body);
+        res.redirect("/dashboard");
       } else {
         console.log(err);
         res.send(err);
@@ -215,7 +222,7 @@ router.post("/places", (req, res) => {
     [area, place_type, state, city, country, pincode],
     (err, result) => {
       if (!err) {
-        res.send(result); //must be redirected to dashboard
+        res.redirect("/dashboard"); //must be redirected to dashboard
       } else {
         console.log(err);
         res.sendStatus(500);
@@ -237,7 +244,7 @@ router.post("/product", (req, res) => {
     [name, where_made, product_state],
     (err, result) => {
       if (!err) {
-        res.send(result);
+        res.redirect("/dashboard");
       } else {
         console.log(err);
         res.send("0");

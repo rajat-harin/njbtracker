@@ -15,7 +15,7 @@
 							<option>Source</option>
 							{{#if cities}}
                                 {{#each cities}}
-                                    <option value="{{this.id}}">{{this.city}}</option>
+                                    <option value="{{this.id}}">{{this.area}}, {{this.city}}, {{this.state}}</option>
                                 {{/each}}
                             {{/if}}
 							
@@ -31,7 +31,7 @@
 							<option>Destination</option>
 							{{#if cities}}
                                 {{#each cities}}
-                                    <option value="{{this.id}}">{{this.city}}</option>
+                                    <option value="{{this.id}}">{{this.area}}, {{this.city}}, {{this.state}}</option>
                                 {{/each}}
                             {{/if}}
 						</select>
