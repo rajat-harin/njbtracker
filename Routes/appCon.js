@@ -233,6 +233,7 @@ router.post("/recieve_info", (req, res) => {
     var id = req.body.id;
     let final = {};
     let temp = [];
+    let temp1 = [];
     let array = [];
     //change
 
@@ -247,7 +248,7 @@ router.post("/recieve_info", (req, res) => {
                         [element.delivery_id], (err, result4) => {
                             if (!err) {
                                 result4.rows.forEach((elem1) => {
-                                    temp.push(elem1);
+                                    temp1.push(elem1);
                                 });
 
                                 connection.query(
@@ -265,9 +266,10 @@ router.post("/recieve_info", (req, res) => {
                                                 (err, result3) => {
                                                     if (!err) {
                                                         console.log("loop");
+
                                                         final.order_id = element.id;
                                                         //ye niche wala if else block ka logic galat h so naya bana lena
-                                                        final.driver=temp.shift();
+                                                        final.driver=temp1.shift();
                                                         final.source = temp.shift();
                                                         final.destination = temp.shift();
 
